@@ -1,0 +1,208 @@
+#' Removes or corrects hypermutated sequences
+#'
+#' @param fasta.file The input sequnce file name.
+#' @param output.dir Target output directory
+#' @param p.value.threshold The cutoff for the Fisher Exact test to decide
+#' whether or not hypermutation is present
+#' @param fix.instead.of.remove If TRUE, then hypermutated sequences will not
+#' be removed. The hyper mutated bases will be replaced with the value in
+#' 'fix.with'.
+#' @param fix.with The letter to replace hypermutated bases with. Default R.
+#' @export
+
+removeHypermutatedSequences <- function ( fasta.file, output.dir = NULL, p.value.threshold = 0.1, fix.instead.of.remove = FALSE, fix.with = "R" ) {
+
+  if( length( grep( "^(.*?)\\/[^\\/]+$", fasta.file ) ) == 0 ) {
+      fasta.file.path <- ".";
+  } else {
+      fasta.file.path <-
+          gsub( "^(.*?)\\/[^\\/]+$", "\\1", fasta.file );
+  }
+  fasta.file.short <-
+      gsub( "^.*?\\/?([^\\/]+?)$", "\\1", fasta.file, perl = TRUE );
+  fasta.file.short.nosuffix <-
+      gsub( "^([^\\.]+)(\\..+)?$", "\\1", fasta.file.short, perl = TRUE );
+  fasta.file.short.suffix <-
+      gsub( "^([^\\.]+)(\\..+)?$", "\\2", fasta.file.short, perl = TRUE );
+
+  if( is.null( output.dir ) ) {
+      output.dir = fasta.file.path;
+  }
+  if( is.null( output.dir ) ) {
+      output.dir = ".";
+  }
+  ## Remove "/" from end of output.dir
+  output.dir <-
+      gsub( "^(.*?)\\/+$", "\\1", output.dir );
+
+  if( fix.instead.of.remove ){
+      fix.with <- tolower(fix.with)
+  }
+  
+  in.fasta <- read.dna( fasta.file, format = "fasta" );
+
+  .consensus <- as.DNAbin( matrix( seqinr::consensus( as.character( in.fasta ) ), nrow = 1 ) );
+  rownames( .consensus ) <- "Consensus sequence";
+
+    ## REMOVE DUPLICATES FIRST.
+    ## If there are any duplicate sequences, remove them and
+    ## incorporate the number of identical sequences into their names (_nnn suffix).
+    # The output has the file name of the consensus file.
+    fasta.file.no.duplicates <-
+        removeDuplicateSequencesFromAlignedFasta( fasta.file, output.dir );
+    fasta.file.no.duplicates.short <-
+        gsub( "^.*?\\/?([^\\/]+?)$", "\\1", fasta.file.no.duplicates, perl = TRUE );
+    fasta.file.no.duplicates.short.nosuffix <-
+        gsub( "^(.*?)\\.[^\\.]+$", "\\1", fasta.file.no.duplicates.short, perl = TRUE );
+    in.fasta.no.duplicates <-
+        read.dna( fasta.file.no.duplicates, format = "fasta" );
+    duplicate.sequences.tbl.file <-
+        paste( output.dir, "/", fasta.file.no.duplicates.short.nosuffix, ".tbl", sep = "" );
+  if( file.exists( duplicate.sequences.tbl.file ) ) { # won't exist if nothing was removed.
+    duplicate.sequences.tbl.in <- read.table( file = duplicate.sequences.tbl.file, sep = "\t", header = TRUE );
+    duplicate.sequences.tbl <- apply( duplicate.sequences.tbl.in, 1:2, function( .seq.name ) {
+          # Fix our "escape" of the BAR and SLASH.
+          .seq.name <- gsub( "-x-BAR-x-", "|", .seq.name );
+          .seq.name <- gsub( "-x-SLASH-x-", "/", .seq.name );
+          .seq.name <- gsub( "-x-BACKSLASH-x-", "\\", .seq.name );
+          .seq.name <- gsub( "-x-DOT-x-", ".", .seq.name );
+          .seq.name <- gsub( "-x-DOTDOT-x-", "..", .seq.name );
+          return( .seq.name );
+      } );
+   } else {
+       duplicate.sequences.tbl <- NULL;
+   }
+    
+  compute.hypermut2.p.value <-
+    function( seq.i, fix.sequence = FALSE ) {
+      ## ERE I AM.  Bizarrely I can't quite reproduce what's on the web site.  I have more "potential" sites than are computed there, and I do not know why (todo: ask LANL)
+      num.mut <- 0;
+      num.potential.mut <- 0;
+      num.control <- 0;
+      num.potential.control <- 0;
+      for( window.start.i in 1:( ncol( in.fasta.no.duplicates ) - 2 ) ) {
+          # if the window has any gaps in either sequence, skip it.
+          if( any( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 0:2 ] ) == "-" ) || any( as.character( .consensus[ 1, window.start.i + 0:2 ] ) == "-" ) ) {
+              next;
+          }
+          #if( ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 0 ] ) == "a" ) && ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 1 ] ) %in% c( "a", "g" ) ) && ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 2 ] ) %in% c( "a", "g", "t" ) ) ) {
+          ## Added that the ref has to be an a or a g.
+          if( ( as.character( .consensus[ 1, window.start.i + 0 ] ) %in% c( "a", "g" ) ) && ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 0 ] ) == "a" ) && ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 1 ] ) %in% c( "a", "g" ) ) && ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 2 ] ) %in% c( "a", "g", "t" ) ) && ( in.fasta.no.duplicates[ seq.i, window.start.i + 1 ] == .consensus[ 1, window.start.i + 1 ] ) && ( in.fasta.no.duplicates[ seq.i, window.start.i + 2 ] == .consensus[ 1, window.start.i + 2 ] ) ) { # unsure whether we need to enforce no change in the "context" sites.
+              num.potential.mut <- num.potential.mut + 1;
+              #if( ( as.character( .consensus[ window.start.i + 0 ] ) == "g" ) && ( as.character( .consensus[ window.start.i + 1 ] ) %in% c( "a", "g" ) ) && ( as.character( .consensus[ window.start.i + 2 ] ) %in% c( "a", "g", "t" ) ) ) {
+              if( ( as.character( .consensus[ 1, window.start.i + 0 ] ) == "g" ) ) { # don't enforce context in reference sequence
+                  #print( window.start.i );
+                  #print( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 0:2 ] ) );
+                  #print( as.character( .consensus[ 1, window.start.i + 0:2 ] ) );
+                  num.mut <- num.mut + 1;
+                  if( fix.sequence ) {
+                      in.fasta.no.duplicates[ seq.i, window.start.i ] <<- as.DNAbin( fix.with );
+                  }
+              }
+          }
+          #if( ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 0 ] ) == "a" ) && ( ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 1 ] ) %in% c( "c", "t" ) ) || ( ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 1 ] ) %in% c( "a", "g" ) ) && ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 2 ] ) == "c" ) ) ) ) {
+          ## Added that the ref has to be an a or a g.
+          if( ( as.character( .consensus[ 1, window.start.i + 0 ] ) %in% c( "a", "g" ) ) && ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 0 ] ) == "a" ) && ( ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 1 ] ) %in% c( "c", "t" ) ) || ( ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 1 ] ) %in% c( "a", "g" ) ) && ( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 2 ] ) == "c" ) ) ) && ( in.fasta.no.duplicates[ seq.i, window.start.i + 1 ] == .consensus[ 1, window.start.i + 1 ] ) && ( in.fasta.no.duplicates[ seq.i, window.start.i + 2 ] == .consensus[ 1, window.start.i + 2 ] ) ) { # unsure whether we need to enforce no change in the "context" sites.
+              num.potential.control <- num.potential.control + 1;
+              #if( ( as.character( .consensus[ window.start.i + 0 ] ) == "g" ) && ( as.character( .consensus[ window.start.i + 1 ] ) %in% c( "a", "g" ) ) && ( as.character( .consensus[ window.start.i + 2 ] ) %in% c( "a", "g", "t" ) ) ) {
+              if( ( as.character( .consensus[ 1, window.start.i + 0 ] ) == "g" ) ) { # don't enforce context in reference sequence
+                  #print( window.start.i );
+                  #print( as.character( in.fasta.no.duplicates[ seq.i, window.start.i + 0:2 ] ) );
+                  #print( as.character( .consensus[ 1, window.start.i + 0:2 ] ) );
+                  num.control <- num.control + 1;
+              }
+          }
+      }
+      p.value <- fisher.test( ( matrix( c( num.control, ( num.potential.control - num.control ), num.mut, ( num.potential.mut - num.mut ) ), nrow = 2, byrow = T ) ) )$p.value;
+      ## TODO: REMOVE
+      # print( c( num.mut = num.mut, num.potential.mut = num.potential.mut ) );
+      return( p.value );
+    }; # compute.hypermut2.p.value (..)
+    
+  exclude.sequence <- rep( FALSE, nrow( in.fasta ) );
+  names( exclude.sequence ) <- rownames( in.fasta );
+  fixed.sequence <- rep( FALSE, nrow( in.fasta ) );
+  names( fixed.sequence ) <- rownames( in.fasta );
+  for( seq.i in 1:nrow( in.fasta.no.duplicates ) ) {
+    p.value <- compute.hypermut2.p.value( seq.i );
+    if( p.value < p.value.threshold ) {
+        if( fix.instead.of.remove ) {
+            .message <- paste( "Fixing", rownames( in.fasta.no.duplicates )[ seq.i ], "because the pseudo-HYPERMUT2.0 p-value is", p.value, "." );
+            # Run it again but this time fix it.
+            .result.ignored <-
+                compute.hypermut2.p.value( seq.i, fix.sequence = TRUE );
+            fixed.sequence[ rownames( in.fasta.no.duplicates )[ seq.i ] ] <- TRUE;
+        } else {
+            .message <- paste( "Excluding", rownames( in.fasta.no.duplicates )[ seq.i ], "because the pseudo-HYPERMUT2.0 p-value is", p.value, "." );
+            exclude.sequence[ rownames( in.fasta.no.duplicates )[ seq.i ] ] <- TRUE;
+        }
+        ## TODO: REMOVE
+        cat( .message, fill = TRUE );
+    }
+  } # End foreach seq.i
+
+  if( is.null( duplicate.sequences.tbl ) ) {
+    out.fasta <- in.fasta;
+  } else {
+    if( fix.instead.of.remove ) {
+      out.fasta <- in.fasta;
+    }
+    #print( names( exclude.sequence )[ exclude.sequence ] );
+    #print( duplicate.sequences.tbl[ , "retained" ] );
+    excluded.sequences.with.duplicates <- intersect( names( exclude.sequence )[ exclude.sequence ], duplicate.sequences.tbl[ , "retained" ] );
+    newly.excluded.sequence <- rep( FALSE, nrow( in.fasta ) );
+    names( newly.excluded.sequence ) <- rownames( in.fasta );
+    while( length( excluded.sequences.with.duplicates ) > 0 ) {
+        newly.excluded.sequence[ newly.excluded.sequence ] <- FALSE;
+        rownames( duplicate.sequences.tbl ) <- duplicate.sequences.tbl[ , "retained" ];
+        .duplicates.strings <- duplicate.sequences.tbl[ excluded.sequences.with.duplicates, "removed" ];
+        .duplicates.list <- strsplit( .duplicates.strings, "," );
+        names( .duplicates.list ) <- excluded.sequences.with.duplicates;
+        .result.ignored <- 
+        lapply( excluded.sequences.with.duplicates, function( .retained.sequence ) {
+            if( length( .duplicates.list[[ .retained.sequence ]] ) > 0 ) {
+                if( fix.instead.of.remove ) {
+                  ## TODO: REMOVE
+                  cat( paste( "Fixing '", .duplicates.list[[ .retained.sequence ]], "' because it is a duplicate of ", .retained.sequence, ".", sep = "", collapse = "\n" ), fill = TRUE );
+                  # Copy the fixed sequence.
+                  .result.ignored <- 
+                  sapply( .duplicates.list[[ .retained.sequence ]], function ( .retained ) {
+                      out.fasta[ .retained, ] <<- out.fasta[ .retained.sequence, ];
+                      fixed.sequence[ .duplicates.list[[ .retained.sequence ]] ] <<- TRUE;
+                      return( NULL );
+                  } );
+              } else {
+                  ## TODO: REMOVE
+                  cat( paste( "Excluding '", .duplicates.list[[ .retained.sequence ]], "' because it is a duplicate of ", .retained.sequence, ".", sep = "", collapse = "\n" ), fill = TRUE );
+              }
+            }
+            exclude.sequence[ .duplicates.list[[ .retained.sequence ]] ] <<- TRUE;
+            newly.excluded.sequence[ .duplicates.list[[ .retained.sequence ]] ] <<- TRUE;
+            return( NULL );
+        } );
+        # Recurse in case some of the sequences just excluded were recursively removed.
+        excluded.sequences.with.duplicates <- intersect( names( newly.excluded.sequence )[ newly.excluded.sequence ], duplicate.sequences.tbl[ , "retained" ] );
+    } # End while( length( excluded.sequences.with.duplicates ) > 0 )
+    if( !fix.instead.of.remove ) {
+        out.fasta <- in.fasta[ !exclude.sequence, , drop = FALSE ];
+    }
+  } # End if is.null( duplicate.sequences.tbl ) .. else ..
+    
+  # Write the subalignment as a fasta file
+  if( fix.instead.of.remove ) {
+      out.fasta.file = paste( output.dir, "/", fasta.file.short.nosuffix, "_fixHypermutatedSequencesWith", fix.with, fasta.file.short.suffix, sep = "" );
+  } else {
+      out.fasta.file = paste( output.dir, "/", fasta.file.short.nosuffix, "_removeHypermutatedSequences", fasta.file.short.suffix, sep = "" );
+  }
+
+  write.dna( out.fasta, out.fasta.file, format = "fasta", colsep = "", indent = 0, blocksep = 0, colw = 72 ); # TODO: DEHACKIFY MAGIC NUMBER 72 (fasta newline column)
+    
+  if( fix.instead.of.remove ) {
+      .rv <- sum( fixed.sequence );
+  } else {
+      .rv <- sum( exclude.sequence );
+  }
+    
+  return( .rv );
+} # removeHypermutatedSequences (..)
+
