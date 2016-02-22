@@ -1,0 +1,14 @@
+>ref_seq_2_uhm_2_mhm_2_ucm_2_mcm
+--GGG----GGG----AGA----AAG----GTC----GTC----ACT----ACA--
+>seq_+0hm_+0cm
+--GGG----GGG----AGA----AAG----GTC----GTC----ACT----ACA--
+>seq_+1hm_+0cm
+--AGG----GGG----AGA----AAG----GTC----GTC----ACT----ACA--
+>seq_+0hm_+1cm
+--GGG----GGG----AGA----AAG----ATC----GTC----ACT----ACA--
+>seq_+1hm_+1cm
+--AGG----GGG----AGA----AAG----ATC----GTC----ACT----ACA--
+>seq_+2hm_+0cm
+--AGG----AGG----AGA----AAG----GTC----GTC----ACT----ACA--
+>seq_+2hm_+2cm
+--AGG----AGG----AGA----AAG----ATC----ATC----ACT----ACA--
