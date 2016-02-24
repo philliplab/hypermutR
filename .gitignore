@@ -1,2 +1,6 @@
 *.swp
 *.swo
+.Rproj.user
+.Rhistory
+.RData
+.Rproj

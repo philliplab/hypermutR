@@ -1,0 +1,13 @@
+Package: hypermutR
+Title: Detects hypermutation in DNA
+Version: 0.0.0.9000
+Author: Paul Edlefsen <pedlefsen@gmail.com>,
+        Phillip Labuschagne <philliplab@gmail.com>
+Description: Follows the algorithm described on the website of the Hypermut tool on LANL to detect hypermutation.
+Depends: 
+    R (>= 3.2.3),
+    ape,
+    ade4
+License: GPLv3
+LazyData: true
+Suggests: testthat
