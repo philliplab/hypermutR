@@ -69,7 +69,8 @@ control which I understand perfectly.
 
 A key fact to remember: It is a lot less effort to run a small number of big
 files through LANL than a big number of small files - design the tests
-accordingly.
+accordingly. This will involve a bit of hacking to play nice with the current
+way the simulation code is setup.
 
 Simulate the test sequences by chaining a bunch of patterns together seperated
 by gaps.

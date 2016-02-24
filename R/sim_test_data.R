@@ -31,7 +31,7 @@ randomize_ambig <- function(seq_dat){
 
 simTestSeq <- function(n_unmut_hypermut, n_mut_hypermut,
                        n_unmut_control, n_mut_control,
-                       shuffle = FALSE){
+                       shuffle = FALSE, n=1){
   unmut_hypermut <- '--GRD--'
   mut_hypermut <- '--ARD--'
 
@@ -48,13 +48,17 @@ simTestSeq <- function(n_unmut_hypermut, n_mut_hypermut,
     rep(unmut_control, n_unmut_control),
     rep(mut_control, n_mut_control))
   if (shuffle) {all_frags <- all_frags[sample(1:length(all_frags), length(all_frags))]}
-  sim_seq <- DNAString(paste(all_frags, sep = '', collapse = ''))
-  sim_seq <- randomize_ambig(sim_seq)
-  names(sim_seq) <- paste('ref_seq', n_unmut_hypermut, 'uhm',
-                          n_mut_hypermut, 'mhm',
-                          n_unmut_control, 'ucm',
-                          n_mut_control, 'mcm', sep = '_')
-  return(sim_seq)
+  all_seq <- DNAStringSet(NULL)
+  for (i in 1:n){
+    sim_seq <- DNAString(paste(all_frags, sep = '', collapse = ''))
+    sim_seq <- randomize_ambig(sim_seq)
+    names(sim_seq) <- paste('ref_seq', n_unmut_hypermut, 'uhm',
+                            n_mut_hypermut, 'mhm',
+                            n_unmut_control, 'ucm',
+                            n_mut_control, 'mcm', sep = '_')
+    all_seq <- c(all_seq, sim_seq)
+  }
+  return(all_seq)
 }
 
 copyAndHyperMutate <- function(seq_dat, n_new_hypermut, n_new_controlmut){

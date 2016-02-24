@@ -1,4 +1,4 @@
 library(testthat)
-library(unhypermutoR)
+library(hypermutR)
 
-test_check("unhypermutoR")
+test_check("hypermutR")

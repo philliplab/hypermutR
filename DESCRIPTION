@@ -7,7 +7,8 @@ Description: Follows the algorithm described on the website of the Hypermut tool
 Depends: 
     R (>= 3.2.3),
     ape,
-    ade4
+    ade4,
+    Biostrings
 License: GPLv3
 LazyData: true
 Suggests: testthat
