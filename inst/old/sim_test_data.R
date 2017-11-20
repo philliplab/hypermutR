@@ -39,6 +39,19 @@ simTestSeq <- function(n_unmut_hypermut, n_mut_hypermut,
   unmut_control2 <- '--GRC--'
   mut_control1 <- '--AYN--'
   mut_control2 <- '--ARC--'
+  
+  # hack the patterns to allow testing in the presence of LANL's
+  # implementations of the D and N patterns
+  # This should allow perfect prediction of the LANL results??? I hope
+  #   Note that this assumes that LANL measures evolution from
+  #   reference to query: G in reference becomes A in query
+  unmut_hypermut <- '--GAT--'
+  mut_hypermut <- '--AAT--'
+
+  unmut_control1 <- '--GYY--'
+  unmut_control2 <- '--GRC--'
+  mut_control1 <- '--AYY--'
+  mut_control2 <- '--ARC--'
 
   unmut_control <- unmut_control1
   mut_control <- mut_control1
@@ -55,7 +68,8 @@ simTestSeq <- function(n_unmut_hypermut, n_mut_hypermut,
     names(sim_seq) <- paste('ref_seq', n_unmut_hypermut, 'uhm',
                             n_mut_hypermut, 'mhm',
                             n_unmut_control, 'ucm',
-                            n_mut_control, 'mcm', sep = '_')
+                            n_mut_control, 'mcm',
+                            'seqnum', sprintf("%03d", i), sep = '_')
     all_seq <- c(all_seq, sim_seq)
   }
   return(all_seq)
@@ -79,27 +93,28 @@ copyAndHyperMutate <- function(seq_dat, n_new_hypermut, n_new_controlmut){
   return(seq_dat)
 }
 
-# n_unmut_hypermut <- 10
-# n_mut_hypermut <- 10
-# n_unmut_control <- 10
-# n_mut_control <- 10
+ n_unmut_hypermut <- 10
+ n_mut_hypermut <- 10
+ n_unmut_control <- 10
+ n_mut_control <- 10
+ 
+ ref_seq <- simTestSeq(20,15,10,5)
+ test_file1 <- DNAStringSet(c(
+ ref_seq,
+ copyAndHyperMutate(ref_seq, 0, 0),
+ copyAndHyperMutate(ref_seq, 4, 4),
+ copyAndHyperMutate(ref_seq, 1, 1),
+ copyAndHyperMutate(ref_seq, 8, 8),
+ copyAndHyperMutate(ref_seq, 9, 9),
+ copyAndHyperMutate(ref_seq, 4, 0),
+ copyAndHyperMutate(ref_seq, 1, 0),
+ copyAndHyperMutate(ref_seq, 8, 0),
+ copyAndHyperMutate(ref_seq, 9, 0)
+ ))
 # 
-# ref_seq <- simTestSeq(10,10,10,10)
-# test_file1 <- DNAStringSet(c(
-# ref_seq,
-# copyAndHyperMutate(ref_seq, 5, 5),
-# copyAndHyperMutate(ref_seq, 1, 1),
-# copyAndHyperMutate(ref_seq, 8, 8),
-# copyAndHyperMutate(ref_seq, 10, 10),
-# copyAndHyperMutate(ref_seq, 5, 0),
-# copyAndHyperMutate(ref_seq, 1, 0),
-# copyAndHyperMutate(ref_seq, 8, 0),
-# copyAndHyperMutate(ref_seq, 10, 0)
-# ))
 # 
-# 
-# writeXStringSet(test_file1, '/tmp/test_file1.fasta', width=20000)
-# 
+ writeXStringSet(test_file1, '/tmp/hack_the_patterns_2.fasta', width=20000)
+ 
 # ref_seq <- simTestSeq(1,1,1,1)
 # test_file_1111 <- DNAStringSet(c(
 # ref_seq,
