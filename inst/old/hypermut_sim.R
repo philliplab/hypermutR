@@ -7,6 +7,7 @@ ld_seqs <- readDNAStringSet('/home/phillipl/projects/hiv-founder-id/tests/sim_da
 hd_seqs <- readDNAStringSet('/home/phillipl/projects/hiv-founder-id/tests/sim_data/own_sim/HVTN503-162450071-1056_boost_2/HVTN503-162450071-1056_boost_2_own_sim.fasta')
 
 devtools::use_data(ld_seqs)
+devtools::use_data(hd_seqs)
 
 
 
