@@ -6,7 +6,6 @@
 #' @export
 
 scan_seq <- function(cons, the_seq, the_pattern){
-
   cons <- strsplit(toupper(cons), '')[[1]]
   the_seq <- strsplit(toupper(the_seq), '')[[1]]
   num.potential.mut <- 0
@@ -48,7 +47,7 @@ scan_seq <- function(cons, the_seq, the_pattern){
           }
       }
   } # for window.start.i
-#  p.value <- fisher.test( ( matrix( c( num.control, ( num.potential.control - num.control ), num.mut, ( num.potential.mut - num.mut ) ), nrow = 2, byrow = T ) ) )$p.value;
+  p.value <- fisher.test( ( matrix( c( num.control, ( num.potential.control - num.control ), num.mut, ( num.potential.mut - num.mut ) ), nrow = 2, byrow = T ) ) )$p.value;
 #  ## TODO: REMOVE
 #  # print( row.names(the_seq)[seq.i])
 #  # print( c( num.mut = num.mut, num.potential.mut = num.potential.mut, num.control = num.control, num.potential.control = num.potential.control, p.value = p.value ) );
@@ -58,7 +57,8 @@ scan_seq <- function(cons, the_seq, the_pattern){
   return(list(num.mut = num.mut,
               num.potential.mut = num.potential.mut,
               num.control = num.control,
-              num.potential.control = num.potential.control)
+              num.potential.control = num.potential.control,
+              p.value = p.value)
   )
   if (FALSE){
     # This is a TEMP store from some testing code - move to unit tests
