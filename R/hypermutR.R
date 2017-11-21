@@ -10,7 +10,15 @@ remove_hypermut <- function(dat){
   
   ddat <- deduplicate_seqs(dat)
   for (i in length(ddat)){
+    # call scan_hyper
+    result_hyper <- scan_seq(cons, ddat[[i]]$the_seq, 'hyper')
+    # call scan_control
+    # comp p.value
+    # if significant
+      # if fix, then fix and include
+    # if not significant, then include
   }
+
   return(NULL)
   if (FALSE){
     # TEMP store for testing/debugging code
