@@ -6,10 +6,14 @@
 #' @export
 
 scan_seq <- function(cons, the_seq, the_pattern){
+
   cons <- strsplit(toupper(cons), '')[[1]]
   the_seq <- strsplit(toupper(the_seq), '')[[1]]
   num.potential.mut <- 0
   num.mut <- 0
+  num.potential.control <- 0
+  num.control <- 0
+
   for( window.start.i in 1:(length(cons) - 2) ) {
       context.indx1 <- 1
       context.indx2 <- 2
@@ -30,19 +34,19 @@ scan_seq <- function(cons, the_seq, the_pattern){
 #              }
           }
       }
-#      if( ( as.character( cons[ 1, window.start.i + 0 ] ) == "g" ) && # Reference must mutate from G
-#          ( ( ( as.character( the_seq[ seq.i, window.start.i + context.indx1 ] ) %in% c( "c", "t" ) ) && # Option 1 Context position 1 must match Y = [CT] in query
-#              ( as.character( the_seq[ seq.i, window.start.i + context.indx2 ] ) %in% c( "a", "c", "g", "t" ) )) || # Option 1 Context position 2 must match N = [ACGT] in query
-#            ( ( as.character( the_seq[ seq.i, window.start.i + context.indx1 ] ) %in% c( "a", "g" ) ) && # Option 2 Context position 1 must match R = [AG] in query
-#              ( as.character( the_seq[ seq.i, window.start.i + context.indx2 ] ) == "c" ) ) ) ){ # Option 2 Context position 2 must match C in query
-#          num.potential.control <- num.potential.control + 1;
-#          if( as.character( the_seq[ seq.i, window.start.i + 0 ] ) == "a" ) { # If G -> A mutation occureed
-#              #print( window.start.i );
-#              #print( as.character( the_seq[ seq.i, window.start.i + 0:2 ] ) );
-#              #print( as.character( cons[ 1, window.start.i + 0:2 ] ) );
-#              num.control <- num.control + 1;
-#          }
-#      }
+      if( ( cons[ window.start.i + 0 ] == "G" ) && # Reference must mutate from G
+          ( ( ( the_seq[ window.start.i + context.indx1 ] %in% c( "C", "T" ) ) && # Option 1 Context position 1 must match Y = [CT] in query
+              ( the_seq[ window.start.i + context.indx2 ] %in% c( "A", "C", "G", "T" ) )) || # Option 1 Context position 2 must match N = [ACGT] in query
+            ( ( the_seq[ window.start.i + context.indx1 ] %in% c( "A", "G" ) ) && # Option 2 Context position 1 must match R = [AG] in query
+              ( the_seq[ window.start.i + context.indx2 ] ) == "C" ) ) ){ # Option 2 Context position 2 must match C in query
+          num.potential.control <- num.potential.control + 1;
+          if( as.character( the_seq[ window.start.i + 0 ] ) == "A" ) { # If G -> A mutation occureed
+              #print( window.start.i );
+              #print( as.character( the_seq[ seq.i, window.start.i + 0:2 ] ) );
+              #print( as.character( cons[ 1, window.start.i + 0:2 ] ) );
+              num.control <- num.control + 1;
+          }
+      }
   } # for window.start.i
 #  p.value <- fisher.test( ( matrix( c( num.control, ( num.potential.control - num.control ), num.mut, ( num.potential.mut - num.mut ) ), nrow = 2, byrow = T ) ) )$p.value;
 #  ## TODO: REMOVE
@@ -52,7 +56,9 @@ scan_seq <- function(cons, the_seq, the_pattern){
 #  return( list(p.value = p.value,
 #               potential.pos = potential.pos) );
   return(list(num.mut = num.mut,
-              num.potential.mut = num.potential.mut)
+              num.potential.mut = num.potential.mut,
+              num.control = num.control,
+              num.potential.control = num.potential.control)
   )
   if (FALSE){
     # This is a TEMP store from some testing code - move to unit tests
