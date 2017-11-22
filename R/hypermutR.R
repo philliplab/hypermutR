@@ -12,15 +12,11 @@ remove_hypermut <- function(dat){
   
   ddat <- deduplicate_seqs(dat)
   for (i in 1:length(ddat)){
-    # call scan_seq
     result_scan <- scan_seq(cons, ddat[[i]]$the_seq, 'hyper')
 
     if (result_scan$p.value < 0.1){
-      x <- 0
-      rm(x)
-      # if fix, then fix and include
+      print(paste("Removing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, sep = ''))
     } else {
-    # if not significant, then include
       results <- rbind(results,
         data.frame(seq_name = ddat[[i]]$dup_names,
                    the_seq = ddat[[i]]$the_seq,
@@ -32,10 +28,11 @@ remove_hypermut <- function(dat){
   seq_results <- DNAStringSet(results$the_seq)
   names(seq_results) <- results$seq_name
 
-  return(NULL)
+  return(seq_results)
   if (FALSE){
     # TEMP store for testing/debugging code
     # to be moved to unit tests sooner
+    dat <- readDNAStringSet('/home/phillipl/projects/hack_hypermut/KID141.fasta')
     remove_hypermut(ld_seqs)
     dat <- sim_hyper(ld_seqs, 20, 0.8, 0, verbose = TRUE)
     dat <- ld_seqs
