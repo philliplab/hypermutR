@@ -9,6 +9,7 @@ remove_hypermut <- function(dat){
   rm(cons_ints)
 
   results <- NULL
+  hypermutants <- NULL
   
   ddat <- deduplicate_seqs(dat)
   for (i in 1:length(ddat)){
@@ -16,6 +17,11 @@ remove_hypermut <- function(dat){
 
     if (result_scan$p.value < 0.1){
       print(paste("Removing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, sep = ''))
+      hypermutants <- rbind(hypermutants,
+        data.frame(seq_name = ddat[[i]]$dup_names,
+                   the_seq = ddat[[i]]$the_seq,
+                   stringsAsFactors = FALSE)
+        )
     } else {
       results <- rbind(results,
         data.frame(seq_name = ddat[[i]]$dup_names,
@@ -28,7 +34,13 @@ remove_hypermut <- function(dat){
   seq_results <- DNAStringSet(results$the_seq)
   names(seq_results) <- results$seq_name
 
-  return(seq_results)
+  seq_hypermutants <- DNAStringSet(hypermutants$the_seq)
+  names(seq_hypermutants) <- hypermutants$seq_name
+
+  return(
+    list(seq_results = seq_results,
+         seq_hypermutants = seq_hypermutants)
+    )
   if (FALSE){
     # TEMP store for testing/debugging code
     # to be moved to unit tests sooner
