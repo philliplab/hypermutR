@@ -9,7 +9,8 @@ Depends:
     ape,
     ade4,
     Biostrings,
-    optparse
+    optparse,
+    testthat
 License: GPLv3
 LazyData: true
 Suggests: testthat
