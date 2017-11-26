@@ -2,7 +2,7 @@ library(hypermutR)
 
 context("Simulation")
 
-test_that("placeholder", {
+test_that("convert_alignment_to_matrix works", {
   expect_equal(1, 1)
 
   ld_mat <- convert_alignment_to_matrix(ld_seqs)
@@ -18,3 +18,29 @@ test_that("placeholder", {
                      row = row_samp, col = col_samp)
   expect_equal(paste(let_samp, collapse = ''), "gcgtacacaacgccggtaat")
 })
+
+#sim_hyper <- function(dat, n1, n2, n3, seed = NULL, verbose = FALSE){
+
+test_that("sim_hyper works", {
+  test_seq <- ld_seqs[1]
+  test_seq <- as.character(test_seq)
+
+  n_g <- table(strsplit(test_seq, "")[[1]])['G']
+
+  m10h <- sim_hyper(test_seq, 1, 10, 0, 1)
+  g_count <- table(strsplit(as.character(m10h), "")[[1]])['G']
+  g_gone <- n_g - g_count
+  names(g_gone) <- NULL
+  expect_equal(g_gone, 10)
+
+  m10p <- sim_hyper(test_seq, 1, 0, 20, 1)
+  g_count <- table(strsplit(as.character(m10p), "")[[1]])['G']
+  g_gone <- n_g - g_count
+  names(g_gone) <- NULL
+  expect_equal(g_gone, 20)
+
+  no_g <- sim_hyper(test_seq, 1, 'all', 'all', 1)
+  no_g <- as.character(no_g)
+  expect_false(grepl("g", no_g))
+})
+
