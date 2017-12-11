@@ -16,7 +16,7 @@ hypermutR.R --file_name=/path/to/file.fasta --output_name=/path/to/out_file.fast
 
 suppressPackageStartupMessages(library("hypermutR"))
 
-dat <- readDNAStringSet(opt$file_name)
+dat <- read.fasta(opt$file_name)
 cdat <- remove_hypermut(dat)
 writeXStringSet(cdat$seq_results, opt$output_name, width=80)
 writeXStringSet(cdat$seq_hypermutants, 

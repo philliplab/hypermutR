@@ -5,8 +5,8 @@
 #' @export
 
 convert_alignment_to_matrix <- function(dat){
-  stopifnot(length(unique(width(dat))) == 1) # all sequences of equal length
-  mdat <- matrix('-', nrow = length(dat), ncol = width(dat)[1])
+  stopifnot(length(unique(nchar(dat))) == 1) # all sequences of equal length
+  mdat <- matrix('-', nrow = length(dat), ncol = nchar(dat)[1])
   for (i in 1:length(dat)){
     mdat[i,] <- strsplit(tolower(as.character(dat[i])), '')[[1]]
   }
@@ -78,7 +78,7 @@ sim_hyper <- function(dat, n1, n2, n3, seed = NULL, verbose = FALSE){
       mdat[i, c_n3_spot] <- 'a'
     }
   }
-  new_dat <- DNAStringSet(apply(mdat, 1, paste, sep = '', collapse = ''))
-  names(new_dat) <- names(dat)
+  new_dat <- as.SeqFastadna(apply(mdat, 1, paste, sep = '', collapse = ''),
+                         name = attr(dat, 'name'))
   new_dat
 }

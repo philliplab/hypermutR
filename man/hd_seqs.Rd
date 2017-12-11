@@ -4,7 +4,7 @@
 \name{hd_seqs}
 \alias{hd_seqs}
 \title{High diversity sequence sample}
-\format{A DNAStringSet from library Biostrings}
+\format{A SeqFastadna object from library seqinr}
 \source{
 Simulated based on samples from the Molecular Clock Project
 }

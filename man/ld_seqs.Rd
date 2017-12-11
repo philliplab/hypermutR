@@ -4,7 +4,7 @@
 \name{ld_seqs}
 \alias{ld_seqs}
 \title{Low diversity sequence sample}
-\format{A DNAStringSet from library Biostrings}
+\format{A SeqFastadna object from library seqinr}
 \source{
 Simulated based on samples from the Molecular Clock Project
 }
