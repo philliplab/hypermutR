@@ -44,7 +44,8 @@ remove_hypermut <- function(dat){
   if (FALSE){
     # TEMP store for testing/debugging code
     # to be moved to unit tests sooner
-    dat <- readDNAStringSet('/home/phillipl/projects/hack_hypermut/KID141.fasta')
+    dat <- read.fasta('/home/phillipl/projects/hack_hypermut/KID141.fasta')
+    dat <- read.fasta('/fridge/data/methods_paper/profiles/profile.fasta')
     remove_hypermut(ld_seqs)
     dat <- sim_hyper(ld_seqs, 20, 0.8, 0, verbose = TRUE)
     dat <- ld_seqs
