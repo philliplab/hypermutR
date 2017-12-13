@@ -19,10 +19,10 @@ test_that("convert_alignment_to_matrix works", {
 #sim_hyper <- function(dat, n1, n2, n3, seed = NULL, verbose = FALSE){
 
 test_that("sim_hyper works", {
-  test_seq <- ld_seqs[1]
-  test_seq <- as.character(test_seq)
+  test_seq <- ld_seqs[[1]]
+  test_seq <- paste(as.character(test_seq), collapse = '')
 
-  n_g <- table(strsplit(test_seq, "")[[1]])['G']
+  n_g <- table(strsplit(test_seq, "")[[1]])['g']
 
   m10h <- sim_hyper(test_seq, 1, 10, 0, 1)
   g_count <- table(strsplit(as.character(m10h), "")[[1]])['g']
