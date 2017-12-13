@@ -4,8 +4,8 @@
 #' @export
 
 remove_hypermut <- function(dat){
-  cons_ints <- apply(consensusMatrix(dat), 2, function(x){which(x == max(x))[1]})
-  cons <- paste(row.names(consensusMatrix(dat))[cons_ints], collapse = '')
+  cons_ints <- apply(consensusMatrix_seqinr(dat), 2, function(x){which(x == max(x))[1]})
+  cons <- paste(row.names(consensusMatrix_seqinr(dat))[cons_ints], collapse = '')
   rm(cons_ints)
 
   results <- NULL
@@ -31,15 +31,25 @@ remove_hypermut <- function(dat){
     }
   }
 
-  seq_results <- DNAStringSet(results$the_seq)
-  names(seq_results) <- results$seq_name
+  results_list <- vector('list', nrow(results))
+  for (i in 1:nrow(results)){
+    results_list[[i]] <- results[i,'the_seq']
+    names(results_list)[i] <- results[i, 'seq_name']
+  }
 
-  seq_hypermutants <- DNAStringSet(hypermutants$the_seq)
-  names(seq_hypermutants) <- hypermutants$seq_name
+  if (!is.null(hypermutants)){
+    hypermutants_list <- vector('list', nrow(results))
+    for (i in 1:nrow(hypermutants)){
+      hypermutants_list[[i]] <- hypermutants[i, 'the_seq']
+      names(hypermutants_list)[i] <- hypermutants[i, 'seq_name']
+    }
+  } else {
+    hypermutants_list <- NULL
+  }
 
   return(
-    list(seq_results = seq_results,
-         seq_hypermutants = seq_hypermutants)
+    list(seq_results = results_list,
+         seq_hypermutants = hypermutants_list)
     )
   if (FALSE){
     # TEMP store for testing/debugging code

@@ -5,6 +5,14 @@
 
 deduplicate_seqs <- function(dat){
 
+  if (class(dat) == 'list'){
+    tdat <- character(length(dat))
+    for (i in 1:length(dat)){
+      tdat[i] <- paste(dat[[i]], collapse = '')
+      names(tdat)[i] <- attr(dat[[i]], 'name')
+    }
+    dat <- tdat
+  }
   ndat <- as.character(dat)
   names(ndat) <- names(dat)
   dat <- ndat
