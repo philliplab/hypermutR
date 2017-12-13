@@ -3,8 +3,6 @@ library(hypermutR)
 context("test_sim_data")
 
 test_that("convert_alignment_to_matrix works", {
-  expect_equal(1, 1)
-
   ld_mat <- convert_alignment_to_matrix(ld_seqs)
   expect_equal(class(ld_mat), "matrix")
   expect_equal(nrow(ld_mat), 872)

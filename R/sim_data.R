@@ -5,10 +5,20 @@
 #' @export
 
 convert_alignment_to_matrix <- function(dat){
-  stopifnot(length(unique(nchar(dat))) == 1) # all sequences of equal length
-  mdat <- matrix('-', nrow = length(dat), ncol = nchar(dat)[1])
-  for (i in 1:length(dat)){
-    mdat[i,] <- strsplit(tolower(as.character(dat[i])), '')[[1]]
+  if (class(dat) == "list"){
+    stopifnot(all(sapply(dat, length) == max(sapply(dat, length))))
+    max_length <- max(sapply(dat, length))
+    mdat <- matrix(NA_character_, nrow = length(dat), ncol = max_length)
+    for (i in 1:max_length){
+      mdat[,i] <- sapply(dat, function(y, n){y[n]}, n = i)
+    }
+  } else {
+    # There is a super weird format thing
+    stopifnot(length(unique(nchar(dat))) == 1) # all sequences of equal length
+    mdat <- matrix('-', nrow = length(dat), ncol = nchar(dat)[1])
+    for (i in 1:length(dat)){
+      mdat[i,] <- strsplit(tolower(as.character(dat[i])), '')[[1]]
+    }
   }
   mdat
 }
