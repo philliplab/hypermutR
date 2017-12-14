@@ -41,3 +41,28 @@ test_that("sim_hyper works", {
   expect_false(grepl("g", no_g))
 })
 
+test_that("make_list_SeqFastadna works", {
+
+  dduped <- deduplicate_seqs(ld_seqs)
+  seqs <- rep("", 20)
+  seqs[1] <- dduped[[1]]$the_seq
+  seqs[2] <- dduped[[2]]$the_seq
+  seqs[3:20] <- rep(dduped[[3]]$the_seq, length(3:20))
+  names(seqs) <- paste("seq", 1:20, sep = "")
+
+  x <- make_list_SeqFastadna(seqs[1])
+  expect_equal(length(x), 1)  
+  expect_equal(names(x), "seq1")
+  expect_equal(length(x$seq1), 471)
+  expect_equal(class(x), 'list')
+  expect_equal(class(x[[1]]), 'SeqFastadna')
+  expect_equal(paste(x[[1]][c(1,5,10,34,100,400)], collapse = ''), 'gcgaag')
+
+  x <- make_list_SeqFastadna(seqs)
+  expect_equal(length(x), 20)  
+  expect_equal(names(x)[10], "seq10")
+  expect_equal(length(x$seq15), 471)
+  expect_equal(class(x), 'list')
+  expect_equal(class(x[[19]]), 'SeqFastadna')
+  expect_equal(paste(x[[1]][c(1,5,10,34,100,400)], collapse = ''), 'gcgaag')
+})

@@ -1,3 +1,20 @@
+#' Converts a vector of character strings to the read.fasta format
+#'
+#' @param dat Named vector of character strings
+#' @export
+
+make_list_SeqFastadna <- function(dat){
+  
+  dat_l <- vector('list', length(dat))
+  for (i in 1:length(dat)){
+    dat_l[[i]] <- as.SeqFastadna(strsplit(dat[i], '')[[1]], 
+                                        name = names(dat)[i])
+    names(dat_l)[i] <- names(dat)[i]
+  }
+  dat_l
+}
+
+
 #' Converts an alignment to a matrix
 #'
 #' @param dat DNAStringSet in which each sequence is the same length
