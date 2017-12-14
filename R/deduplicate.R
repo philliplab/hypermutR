@@ -1,6 +1,11 @@
 #' Deduplicates sequence data
 #'
-#' @param dat The sequence data (DNAStringSet)
+#' @return A list in which each unique sequence has an entry consisting of:
+#' 1. the_seq containing the sequence as a character string.
+#' 2. dup_names which is a character vector of the headers of all the
+#'    sequences that had that exact sequence.
+#'
+#' @param dat The sequence data (SeqFastadna)
 #' @export
 
 deduplicate_seqs <- function(dat){

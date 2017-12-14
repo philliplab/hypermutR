@@ -47,7 +47,7 @@ scan_seq <- function(cons, the_seq, the_pattern){
           }
       }
   } # for window.start.i
-  p.value <- fisher.test( ( matrix( c( num.control, ( num.potential.control - num.control ), num.mut, ( num.potential.mut - num.mut ) ), nrow = 2, byrow = T ) ) )$p.value;
+  p.value <- fisher.test( matrix( c( num.control, ( num.potential.control - num.control ), num.mut, ( num.potential.mut - num.mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
 #  ## TODO: REMOVE
 #  # print( row.names(the_seq)[seq.i])
 #  # print( c( num.mut = num.mut, num.potential.mut = num.potential.mut, num.control = num.control, num.potential.control = num.potential.control, p.value = p.value ) );
