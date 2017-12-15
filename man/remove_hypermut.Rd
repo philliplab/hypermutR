@@ -4,10 +4,12 @@
 \alias{remove_hypermut}
 \title{Removes hypermutation from sequence data}
 \usage{
-remove_hypermut(dat)
+remove_hypermut(dat, verbose = TRUE)
 }
 \arguments{
 \item{dat}{The sequence data}
+
+\item{verbose}{Prints name and p-value of removed/fixed sequences}
 }
 \description{
 Removes hypermutation from sequence data

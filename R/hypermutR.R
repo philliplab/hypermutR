@@ -1,9 +1,10 @@
 #' Removes hypermutation from sequence data
 #'
 #' @param dat The sequence data
+#' @param verbose Prints name and p-value of removed/fixed sequences
 #' @export
 
-remove_hypermut <- function(dat){
+remove_hypermut <- function(dat, verbose = TRUE){
   cons_ints <- apply(consensusMatrix_seqinr(dat), 2, function(x){which(x == max(x))[1]})
   cons <- paste(row.names(consensusMatrix_seqinr(dat))[cons_ints], collapse = '')
   rm(cons_ints)
@@ -16,7 +17,9 @@ remove_hypermut <- function(dat){
     result_scan <- scan_seq(cons, ddat[[i]]$the_seq, 'hyper')
 
     if (result_scan$p.value < 0.1){
-      print(paste("Removing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, sep = ''))
+      if (verbose) {
+        print(paste("Removing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, sep = ''))
+      }
       hypermutants <- rbind(hypermutants,
         data.frame(seq_name = ddat[[i]]$dup_names,
                    the_seq = ddat[[i]]$the_seq,
@@ -38,7 +41,7 @@ remove_hypermut <- function(dat){
   }
 
   if (!is.null(hypermutants)){
-    hypermutants_list <- vector('list', nrow(results))
+    hypermutants_list <- vector('list', nrow(hypermutants))
     for (i in 1:nrow(hypermutants)){
       hypermutants_list[[i]] <- hypermutants[i, 'the_seq']
       names(hypermutants_list)[i] <- hypermutants[i, 'seq_name']

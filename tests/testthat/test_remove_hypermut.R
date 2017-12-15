@@ -14,7 +14,8 @@ test_that("remove_hypermut works", {
     names(dat_20_1_0_l)[i] <- names(dat_20_1_0)[i]
   }
   
-  capture.output(x <- remove_hypermut(dat_20_1_0_l))
+  expect_output(remove_hypermut(dat_20_1_0_l), " because p value of ")
+  x <- remove_hypermut(dat_20_1_0_l, verbose = FALSE)
   expect_equal(1, 1)
 
 
