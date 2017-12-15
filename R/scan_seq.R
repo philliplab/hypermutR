@@ -73,7 +73,8 @@ scan_seq <- function(cons, the_seq, the_pattern){
               num.potential.mut = num.potential.mut,
               num.control = num.control,
               num.potential.control = num.potential.control,
-              p.value = p.value)
+              p.value = p.value,
+              all_mut_pos = all_mut_pos)
   )
 }
 
