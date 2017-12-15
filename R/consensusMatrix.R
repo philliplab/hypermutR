@@ -14,6 +14,10 @@
 #' @export
 
 consensusMatrix_seqinr <- function(x, ...){
+  stopifnot(class(x) == "list")
+  for (i in 1:length(x)){
+    stopifnot(class(x[[i]]) == "SeqFastadna")
+  }
   max_length <- max(sapply(x, length))
 
   cons_matrix <- matrix(0, nrow = 18, ncol = max_length)
