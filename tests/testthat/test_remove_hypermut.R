@@ -75,3 +75,14 @@ test_that("remove_hypermut works", {
   expect_equal(x$seq_hypermutants$hyp_seq_one, as.character(hyp_seq_one))
 })
 
+test_that("remove_hypermut reports mut and control positions", {
+  x <- remove_hypermut(hd_seqs)
+  x <- hd_seqs
+  y <- Biostrings::DNAStringSet(as.character(x))
+  names(y) <- attr(x, "name")
+  Biostrings::writeXStringSet(y, '/tmp/hd_seqs.fasta')
+  z <- read.fasta('/tmp/hd_seqs.fasta')
+  hd_seqs <- z
+  devtools::use_data(hd_seqs, overwrite = T)
+})
+

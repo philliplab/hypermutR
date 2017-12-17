@@ -11,11 +11,19 @@ remove_hypermut <- function(dat, verbose = TRUE){
 
   results <- NULL
   hypermutants <- NULL
+  all_mut_pos <- NULL
   
   ddat <- deduplicate_seqs(dat)
   for (i in 1:length(ddat)){
     result_scan <- scan_seq(cons, ddat[[i]]$the_seq, 'hyper')
-
+    c_all_mut_pos <- NULL
+    for (c_name in ddat[[i]]$dup_name){
+      c_all_mut_pos <- rbind(c_all_mut_pos,
+                             cbind(data.frame(seq_name = c_name,
+                                              stringsAsFactors = FALSE),
+                                   result_scan$all_mut_pos))
+    }
+    all_mut_pos <- rbind(all_mut_pos, c_all_mut_pos)
     if (result_scan$p.value < 0.1){
       if (verbose) {
         print(paste("Removing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, sep = ''))
@@ -52,7 +60,8 @@ remove_hypermut <- function(dat, verbose = TRUE){
 
   return(
     list(seq_results = results_list,
-         seq_hypermutants = hypermutants_list)
+         seq_hypermutants = hypermutants_list,
+         all_mut_pos = all_mut_pos)
     )
   if (FALSE){
     # TEMP store for testing/debugging code
