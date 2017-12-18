@@ -77,12 +77,28 @@ test_that("remove_hypermut works", {
 
 test_that("remove_hypermut reports mut and control positions", {
   x <- remove_hypermut(hd_seqs)
-  x <- hd_seqs
-  y <- Biostrings::DNAStringSet(as.character(x))
-  names(y) <- attr(x, "name")
-  Biostrings::writeXStringSet(y, '/tmp/hd_seqs.fasta')
-  z <- read.fasta('/tmp/hd_seqs.fasta')
-  hd_seqs <- z
-  devtools::use_data(hd_seqs, overwrite = T)
+  all_mut_pos <- x$all_mut_pos
+  names(x)
+
+  expect_equal(class(all_mut_pos), 'data.frame')
+  true_names <- c("base.in.query", "full_seq", "hyper", "pos", "seq_name", "type")
+  expect_equal(sort(names(all_mut_pos)), true_names)
+  expect_equal(length(x$seq_results), length(unique(all_mut_pos$seq_name)))
+
+  randoms <- c(205L, 242L, 193L, 527L, 251L, 210L, 406L, 570L, 449L, 331L,
+               622L, 307L, 233L, 291L, 472L, 576L, 557L, 214L, 149L, 280L,
+               503L, 192L, 620L, 572L, 646L)
+  samp_indx <- randoms[4]
+  for (samp_indx in randoms){
+    expect_true(all_mut_pos[samp_indx,'seq_name'] %in% names(x$seq_result))
+  }
+
+#  x <- hd_seqs
+#  y <- Biostrings::DNAStringSet(as.character(x))
+#  names(y) <- attr(x, "name")
+#  Biostrings::writeXStringSet(y, '/tmp/hd_seqs.fasta')
+#  z <- read.fasta('/tmp/hd_seqs.fasta')
+#  hd_seqs <- z
+#  devtools::use_data(hd_seqs, overwrite = T)
 })
 
