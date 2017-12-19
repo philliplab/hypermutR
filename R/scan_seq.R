@@ -17,6 +17,39 @@ scan_seq <- function(cons, the_seq, the_pattern){
   for( window.start.i in 1:(length(cons) - 2) ) {
       context.indx1 <- 1
       context.indx2 <- 2
+
+
+      # if the window has any gaps in either sequence, skip it.
+      # print(window.start.i)
+      # Do not have to check position 0 for gaps since they will fail the == 'g' or == 'a' tests
+
+      # Move the context forward if gaps are encountered to ensure that the
+      # context pattern is matched to the sequence that the APOBEC enzyme
+      # would have encountered.
+      # Lots of IFs to prevent attempting to access values outside of the
+      # valid range
+      # I am sure that this can be done more elegantly...
+      while( as.character( the_seq[ window.start.i + context.indx1 ] ) == "-" ){
+          context.indx1 <- context.indx1 + 1
+          context.indx2 <- context.indx2 + 1
+
+          if (window.start.i + context.indx2 > length(cons)){
+            break
+          }
+      }
+      if (window.start.i + context.indx2 > length(cons)){
+        next
+      }
+      while( as.character( the_seq[ window.start.i + context.indx2 ] ) == "-" ){
+          context.indx2 <- context.indx2 + 1
+          if (window.start.i + context.indx2 > length(cons)){
+            break
+          }
+      }
+      if (window.start.i + context.indx2 > length(cons)){
+        next
+      }
+
       if( ( cons[window.start.i + 0 ] == "G" ) && 
             # Reference must mutate from G
           ( the_seq[window.start.i + context.indx1 ] %in% c( "A", "G" ) ) && 
@@ -28,7 +61,7 @@ scan_seq <- function(cons, the_seq, the_pattern){
           all_mut_pos <- rbind(all_mut_pos,
             data.frame(pos = window.start.i,
                        base.in.query = as.character( the_seq[ window.start.i + 0 ] ),
-                       full_seq = paste(as.character( the_seq[ window.start.i + 0:2 ] ), 
+                       full_seq = paste(as.character( the_seq[ window.start.i + c(0, context.indx1, context.indx2) ] ), 
                                         sep = '', collapse = ''),
                        type = 'mut',
                        hyper = hyper_muted,
@@ -54,7 +87,7 @@ scan_seq <- function(cons, the_seq, the_pattern){
           all_mut_pos <- rbind(all_mut_pos,
             data.frame(pos = window.start.i,
                        base.in.query = as.character( the_seq[ window.start.i + 0 ] ),
-                       full_seq = paste(as.character( the_seq[ window.start.i + 0:2 ] ), 
+                       full_seq = paste(as.character( the_seq[ window.start.i + c(0, context.indx1, context.indx2) ] ), 
                                         sep = '', collapse = ''),
                        type = 'pot',
                        hyper = hyper_muted,
@@ -79,34 +112,4 @@ scan_seq <- function(cons, the_seq, the_pattern){
 }
 
 
-      # if the window has any gaps in either sequence, skip it.
-      # print(window.start.i)
-      # Do not have to check position 0 for gaps since they will fail the == 'g' or == 'a' tests
-
-      # Move the context forward if gaps are encountered to ensure that the
-      # context pattern is matched to the sequence that the APOBEC enzyme
-      # would have encountered.
-      # Lots of IFs to prevent attempting to access values outside of the
-      # valid range
-      # I am sure that this can be done more elegantly...
-#      while( as.character( the_seq[ seq.i, window.start.i + context.indx1 ] ) == "-" ){
-#          context.indx1 <- context.indx1 + 1
-#          context.indx2 <- context.indx2 + 1
-#
-#          if (window.start.i + context.indx2 > ncol(the_seq)){
-#            break
-#          }
-#      }
-#      if (window.start.i + context.indx2 > ncol(the_seq)){
-#        next
-#      }
-#      while( as.character( the_seq[ seq.i, window.start.i + context.indx2 ] ) == "-" ){
-#          context.indx2 <- context.indx2 + 1
-#          if (window.start.i + context.indx2 > ncol(the_seq)){
-#            break
-#          }
-#      }
-#      if (window.start.i + context.indx2 > ncol(the_seq)){
-#        next
-#      }
 

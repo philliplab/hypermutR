@@ -117,3 +117,35 @@ test_that("scan_seq detects the correct positions", {
   expect_equal(sort(result$all_mut_pos$hyper), c(F, F, F, T))
 })
 
+test_that("scan_seq handles gaps correctly", {
+  the_seq <- "--GAA"
+  result <- scan_seq(the_seq, the_seq)
+  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$all_mut_pos$pos, 3)
+
+  the_seq <- "CCG--AA"
+  result <- scan_seq(the_seq, the_seq)
+  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$all_mut_pos$pos, 3)
+
+  the_seq <- "CGA-T"
+  result <- scan_seq(the_seq, the_seq)
+  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$all_mut_pos$pos, 2)
+
+  the_seq <- "--GCA"
+  result <- scan_seq(the_seq, the_seq)
+  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$all_mut_pos$pos, 3)
+
+  the_seq <- "CCG--AC"
+  result <- scan_seq(the_seq, the_seq)
+  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$all_mut_pos$pos, 3)
+
+  the_seq <- "CGC-C"
+  result <- scan_seq(the_seq, the_seq)
+  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$all_mut_pos$pos, 2)
+})
+
