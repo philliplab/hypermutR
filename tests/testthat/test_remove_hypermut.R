@@ -102,3 +102,12 @@ test_that("remove_hypermut reports mut and control positions", {
 #  devtools::use_data(hd_seqs, overwrite = T)
 })
 
+test_that("remove_hypermut handles gaps correctly", {
+  hd_seqs
+  test_seqs <- list('s1' = as.SeqFastadna(c('c','t','g','-','c','c'), name = 's1'),
+                    's2' = as.SeqFastadna(c('c','t','g','-','c','c'), name = 's2'),
+                    's3' = as.SeqFastadna(c('c','t','g','-','c','c'), name = 's3'))
+  x <- remove_hypermut(test_seqs)
+  expect_equal(nrow(x$all_mut_pos), 3)
+  expect_equal(unique(x$all_mut_pos$pos), 3)
+})
