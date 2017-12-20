@@ -3,9 +3,10 @@
 #' @param cons The ancestral sequences to compare against
 #' @param the_seq The query sequence
 #' @param the_pattern The pattern to sequence for. Valid values: 'hyper' and 'control'
+#' @param fix_with Either false or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.
 #' @export
 
-scan_seq <- function(cons, the_seq, the_pattern){
+scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
   cons <- strsplit(toupper(cons), '')[[1]]
   the_seq <- strsplit(toupper(the_seq), '')[[1]]
   num.potential.mut <- 0
@@ -50,6 +51,7 @@ scan_seq <- function(cons, the_seq, the_pattern){
         next
       }
 
+      # Check for hypermutated spots
       if( ( cons[window.start.i + 0 ] == "G" ) && 
             # Reference must mutate from G
           ( the_seq[window.start.i + context.indx1 ] %in% c( "A", "G" ) ) && 
@@ -64,7 +66,7 @@ scan_seq <- function(cons, the_seq, the_pattern){
                        full_seq = paste(as.character( the_seq[ window.start.i + c(0, context.indx1, context.indx2) ] ), 
                                         sep = '', collapse = ''),
                        type = 'mut',
-                       hyper = hyper_muted,
+                       muted = hyper_muted,
                        stringsAsFactors = F)
             )
           if( hyper_muted ) { 
@@ -72,6 +74,7 @@ scan_seq <- function(cons, the_seq, the_pattern){
               num.mut <- num.mut + 1;
           }
       }
+      # Check for control spots
       if( ( cons[ window.start.i + 0 ] == "G" ) && 
           # Reference must mutate from G
           ( ( ( the_seq[ window.start.i + context.indx1 ] %in% c( "C", "T" ) ) && 
@@ -83,19 +86,19 @@ scan_seq <- function(cons, the_seq, the_pattern){
               ( the_seq[ window.start.i + context.indx2 ] ) == "C" ) ) ){ 
                 # Option 2 Context position 2 must match C in query
           num.potential.control <- num.potential.control + 1;
-          hyper_muted <- as.character( the_seq[ window.start.i + 0 ] ) == "A"
+          control_muted <- as.character( the_seq[ window.start.i + 0 ] ) == "A"
           all_mut_pos <- rbind(all_mut_pos,
             data.frame(pos = window.start.i,
                        base.in.query = as.character( the_seq[ window.start.i + 0 ] ),
                        full_seq = paste(as.character( the_seq[ window.start.i + c(0, context.indx1, context.indx2) ] ), 
                                         sep = '', collapse = ''),
                        type = 'pot',
-                       hyper = hyper_muted,
+                       muted = control_muted,
                        stringsAsFactors = F)
             )
 
 
-          if( hyper_muted ) { 
+          if( control_muted ) { 
               # If G -> A mutation occureed
               num.control <- num.control + 1;
           }

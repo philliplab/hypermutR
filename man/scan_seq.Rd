@@ -4,7 +4,7 @@
 \alias{scan_seq}
 \title{Scans over sequences finding changes around given patterns}
 \usage{
-scan_seq(cons, the_seq, the_pattern)
+scan_seq(cons, the_seq, the_pattern, fix_with = FALSE)
 }
 \arguments{
 \item{cons}{The ancestral sequences to compare against}
@@ -12,6 +12,8 @@ scan_seq(cons, the_seq, the_pattern)
 \item{the_seq}{The query sequence}
 
 \item{the_pattern}{The pattern to sequence for. Valid values: 'hyper' and 'control'}
+
+\item{fix_with}{Either false or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.}
 }
 \description{
 Scans over sequences finding changes around given patterns

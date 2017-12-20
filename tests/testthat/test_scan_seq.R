@@ -114,7 +114,7 @@ test_that("scan_seq detects the correct positions", {
   expect_equal(sort(result$all_mut_pos$base.in.query), c('A', 'G', 'G', 'G'))
   expect_equal(sort(result$all_mut_pos$full_seq), c('AGG', 'GAT', 'GCC', 'GGC'))
   expect_equal(sort(result$all_mut_pos$type), c('mut', 'mut', 'pot', 'pot'))
-  expect_equal(sort(result$all_mut_pos$hyper), c(F, F, F, T))
+  expect_equal(sort(result$all_mut_pos$muted), c(F, F, F, T))
 })
 
 test_that("scan_seq handles gaps correctly", {

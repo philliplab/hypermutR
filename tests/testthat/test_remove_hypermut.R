@@ -81,7 +81,7 @@ test_that("remove_hypermut reports mut and control positions", {
   names(x)
 
   expect_equal(class(all_mut_pos), 'data.frame')
-  true_names <- c("base.in.query", "full_seq", "hyper", "pos", "seq_name", "type")
+  true_names <- c("base.in.query", "full_seq", "muted", "pos", "seq_name", "type")
   expect_equal(sort(names(all_mut_pos)), true_names)
   expect_equal(length(x$seq_results), length(unique(all_mut_pos$seq_name)))
 
