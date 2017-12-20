@@ -115,6 +115,7 @@ test_that("remove_hypermut handles gaps correctly", {
 test_that("remove_hypermut fixes correctly", {
   base_seq <- deduplicate_seqs(ld_seqs)[[1]]$the_seq
   hyp_seq_one <- sim_hyper(base_seq, 1, 'all', 0, seed = 1)
+  con_seq_one <- sim_hyper(base_seq, 1, 0, 'all', seed = 2)
 
   # 1 mut 19 nothing
   dat_20_1_0 <- c(hyp_seq_one,
@@ -128,4 +129,20 @@ test_that("remove_hypermut fixes correctly", {
   expect_equal(length(x$seq_hypermutants), 1)
   expect_equal(names(x$seq_hypermutants), 's_1')
   expect_equal(table(strsplit(x$seq_hypermutants$s_1, '')[[1]])['r'], structure(43, names = 'r'))
+
+  # 1 control 19 nothing
+  dat_20_0_1 <- c(con_seq_one,
+                  rep(base_seq, 19))
+  names(dat_20_0_1) <- paste("c", 1:20, sep = '_')
+  dat_20_0_1_l <- make_list_SeqFastadna(dat_20_0_1)
+
+  x <- remove_hypermut(dat_20_0_1_l, verbose = FALSE)
+  expect_equal(length(x$seq_results), 20)
+  expect_equal(length(x$seq_hypermutants), 0)
+  expect_null(x$seq_hypermutants)
+  expect_equal(x$seq_results[[1]], as.character(con_seq_one))
+  for (i in 2:length(x$seq_results)){
+    expect_equal(x$seq_results[[i]], base_seq)
+  }
+
 })
