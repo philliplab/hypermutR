@@ -149,3 +149,12 @@ test_that("scan_seq handles gaps correctly", {
   expect_equal(result$all_mut_pos$pos, 2)
 })
 
+test_that("scan_seq fixes sequences correctly", {
+  the_seq <- "CCAAA"
+  the_con <- "CCGAA"
+  expect_error(result <- scan_seq(the_con, the_seq, fix_with = 'hello'))
+  result <- scan_seq(the_con, the_seq, fix_with = 'r')
+  expect_true('the_seq' %in% names(result))
+  expect_true(all(tolower(result$the_seq) %in% c(letters, '-')))
+  expect_true('r' %in% result$the_seq)
+})

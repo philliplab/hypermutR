@@ -7,6 +7,10 @@
 #' @export
 
 scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
+  if (fix_with != FALSE){
+    fix_with <- tolower(fix_with)
+    stopifnot(tolower(fix_with) %in% letters)
+  }
   cons <- strsplit(toupper(cons), '')[[1]]
   the_seq <- strsplit(toupper(the_seq), '')[[1]]
   num.potential.mut <- 0
@@ -72,6 +76,9 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
           if( hyper_muted ) { 
               # If G -> A mutation occurred
               num.mut <- num.mut + 1;
+              if ( fix_with != FALSE ) {
+                the_seq[ window.start.i ] <- fix_with
+              }
           }
       }
       # Check for control spots
@@ -110,7 +117,8 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
               num.control = num.control,
               num.potential.control = num.potential.control,
               p.value = p.value,
-              all_mut_pos = all_mut_pos)
+              all_mut_pos = all_mut_pos,
+              the_seq = the_seq)
   )
 }
 
