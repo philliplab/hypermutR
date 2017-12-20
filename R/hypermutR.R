@@ -2,9 +2,10 @@
 #'
 #' @param dat The sequence data
 #' @param verbose Prints name and p-value of removed/fixed sequences
+#' @param fix_with Either false or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.
 #' @export
 
-remove_hypermut <- function(dat, verbose = TRUE){
+remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE){
   cons_ints <- apply(consensusMatrix_seqinr(dat), 2, function(x){which(x == max(x))[1]})
   cons <- paste(row.names(consensusMatrix_seqinr(dat))[cons_ints], collapse = '')
   rm(cons_ints)
@@ -15,7 +16,7 @@ remove_hypermut <- function(dat, verbose = TRUE){
   
   ddat <- deduplicate_seqs(dat)
   for (i in 1:length(ddat)){
-    result_scan <- scan_seq(cons, ddat[[i]]$the_seq, 'hyper')
+    result_scan <- scan_seq(cons, ddat[[i]]$the_seq, 'hyper', fix_with = fix_with)
     c_all_mut_pos <- NULL
     for (c_name in ddat[[i]]$dup_name){
       c_all_mut_pos <- rbind(c_all_mut_pos,
@@ -26,20 +27,29 @@ remove_hypermut <- function(dat, verbose = TRUE){
     all_mut_pos <- rbind(all_mut_pos, c_all_mut_pos)
     if (result_scan$p.value < 0.1){
       if (verbose) {
-        print(paste("Removing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, sep = ''))
+        if (fix_with != FALSE) {
+          print(paste("Fixing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, ". Replacing hypermutated positions with ", fix_with, ". Sequences will be left in the seq_results element of the return list and will also appear in the seq_hypermutants element.", sep = ''))
+        } else {
+          print(paste("Removing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, sep = ''))
+        }
       }
       hypermutants <- rbind(hypermutants,
         data.frame(seq_name = ddat[[i]]$dup_names,
-                   the_seq = ddat[[i]]$the_seq,
+# fix_with                   the_seq = ddat[[i]]$the_seq,
+                   the_seq = tolower(paste(result_scan$the_seq, collapse = '')),
                    stringsAsFactors = FALSE)
         )
     } else {
       results <- rbind(results,
         data.frame(seq_name = ddat[[i]]$dup_names,
-                   the_seq = ddat[[i]]$the_seq,
+# fix_with                   the_seq = ddat[[i]]$the_seq,
+                   the_seq = tolower(paste(result_scan$the_seq, collapse = '')),
                    stringsAsFactors = FALSE)
       )
     }
+  }
+  if (fix_with != FALSE){
+    results <- rbind(results, hypermutants)
   }
 
   results_list <- vector('list', nrow(results))

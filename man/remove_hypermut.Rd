@@ -4,12 +4,14 @@
 \alias{remove_hypermut}
 \title{Removes hypermutation from sequence data}
 \usage{
-remove_hypermut(dat, verbose = TRUE)
+remove_hypermut(dat, verbose = TRUE, fix_with = FALSE)
 }
 \arguments{
 \item{dat}{The sequence data}
 
 \item{verbose}{Prints name and p-value of removed/fixed sequences}
+
+\item{fix_with}{Either false or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.}
 }
 \description{
 Removes hypermutation from sequence data
