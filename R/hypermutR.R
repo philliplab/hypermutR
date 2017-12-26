@@ -51,12 +51,12 @@ remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE, ancestor = 'c
                                    result_scan$all_mut_pos))
     }
     all_mut_pos <- rbind(all_mut_pos, c_all_mut_pos)
-    if (result_scan$p.value < p_value){
+    if (result_scan$p_value < p_value){
       if (verbose) {
         if (fix_with != FALSE) {
-          print(paste("Fixing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, ". Replacing hypermutated positions with ", fix_with, ". Sequences will be left in the seq_results element of the return list and will also appear in the seq_hypermutants element.", sep = ''))
+          print(paste("Fixing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p_value, ". Replacing hypermutated positions with ", fix_with, ". Sequences will be left in the seq_results element of the return list and will also appear in the seq_hypermutants element.", sep = ''))
         } else {
-          print(paste("Removing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, sep = ''))
+          print(paste("Removing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p_value, sep = ''))
         }
       }
       hypermutants <- rbind(hypermutants,

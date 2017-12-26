@@ -111,12 +111,12 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
           }
       }
   } # for window.start.i
-  p.value <- fisher.test( matrix( c( num.control, ( num.potential.control - num.control ), num.mut, ( num.potential.mut - num.mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
+  p_value <- fisher.test( matrix( c( num.control, ( num.potential.control - num.control ), num.mut, ( num.potential.mut - num.mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
   return(list(num.mut = num.mut,
               num.potential.mut = num.potential.mut,
               num.control = num.control,
               num.potential.control = num.potential.control,
-              p.value = p.value,
+              p_value = p_value,
               all_mut_pos = all_mut_pos,
               the_seq = the_seq)
   )
