@@ -4,7 +4,8 @@
 \alias{remove_hypermut}
 \title{Removes hypermutation from sequence data}
 \usage{
-remove_hypermut(dat, verbose = TRUE, fix_with = FALSE)
+remove_hypermut(dat, verbose = TRUE, fix_with = FALSE,
+  ancestor = "consensus")
 }
 \arguments{
 \item{dat}{The sequence data}
@@ -12,6 +13,8 @@ remove_hypermut(dat, verbose = TRUE, fix_with = FALSE)
 \item{verbose}{Prints name and p-value of removed/fixed sequences}
 
 \item{fix_with}{Either false or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.}
+
+\item{ancestor}{Either 'consensus' to indicate that the consensus sequences must be computed, or 'first' to indicate that the first sequence in the dataset should be considered to be the ancestral sequence, or the ancestral sequence itself.}
 }
 \description{
 Removes hypermutation from sequence data

@@ -92,14 +92,6 @@ test_that("remove_hypermut reports mut and control positions", {
   for (samp_indx in randoms){
     expect_true(all_mut_pos[samp_indx,'seq_name'] %in% names(x$seq_result))
   }
-
-#  x <- hd_seqs
-#  y <- Biostrings::DNAStringSet(as.character(x))
-#  names(y) <- attr(x, "name")
-#  Biostrings::writeXStringSet(y, '/tmp/hd_seqs.fasta')
-#  z <- read.fasta('/tmp/hd_seqs.fasta')
-#  hd_seqs <- z
-#  devtools::use_data(hd_seqs, overwrite = T)
 })
 
 test_that("remove_hypermut handles gaps correctly", {
@@ -146,3 +138,26 @@ test_that("remove_hypermut fixes correctly", {
   }
 
 })
+
+test_that('ancestral sequence specification is processed correctly', {
+  hd_seqs_cons <- "GATCCAAGTGGACTGGGACTTCTAACCTGTAAAAAAAAGACAGTCGCTGGACCAGGCCAATGCAATACTCTCGGCATATTACAATGGGCCCGTGTGATGATTCCAACGATATCAACTCAACGAATGTTAAATCAGACCCGAGTAGAAGGAGATATAATAATTAGATGTGAAGAATTTCCTTTTAGTGCTAAAACATCAATAGTACAAGTTCATGTATCAATAGACATTGACTGTAGGATTCGGGGCAATCATACAAGAATAAGTGTCGGGATAGGAATGAGACTAGAACACACAGTCTATGCAACACTTGCTACACGAAAAGATGCGATACAAGCACCTTGTAACGTTACTTCGACAACTCTCTACACAACTTTTCACAGAGTAAAAGACGTGTTAAAGGAAGACTGCCATAAGACTGTCGAGTTCTTACCATCGCCTGGTAGTGATCTGGAATTGACAACGCATATGTTT"
+  result <- ancestor_processing('consensus', hd_seqs)
+  expect_equal(result$cons, hd_seqs_cons)
+  expect_equal(result$dat, hd_seqs)
+
+  result <- ancestor_processing('first', hd_seqs)
+  expect_equal(result$cons, paste(as.character(hd_seqs[[1]]), collapse = ''))
+  expect_equal(result$dat[[1]], hd_seqs[[2]])
+  expect_equal(names(result$dat)[1], names(hd_seqs)[2])
+  expect_equal(length(result$dat), length(hd_seqs)-1)
+
+  result <- ancestor_processing('ACCGTG', ld_seqs)
+  expect_equal(result$cons, 'ACCGTG')
+  expect_equal(result$dat, ld_seqs)
+})
+
+
+
+
+
+

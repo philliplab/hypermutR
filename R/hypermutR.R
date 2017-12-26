@@ -1,14 +1,39 @@
+#' Internal function to resolve the ancestor argument of remove_hypermut
+#'
+#' @param ancestor Either 'consensus' to indicate that the consensus sequences must be computed, or 'first' to indicate that the first sequence in the dataset should be considered to be the ancestral sequence, or the ancestral sequence itself.
+#' @param dat The sequence data
+
+ancestor_processing <- function(ancestor, dat){
+  if (tolower(ancestor == 'consensus')){
+    cons_ints <- apply(consensusMatrix_seqinr(dat), 2, function(x){which(x == max(x))[1]})
+    cons <- paste(row.names(consensusMatrix_seqinr(dat))[cons_ints], collapse = '')
+    rm(cons_ints)
+  } else if (tolower(ancestor == 'first')){
+    cons <- paste(as.character(dat[[1]]), collapse = '')
+    n_dat <- vector('list', length(dat)-1)
+    for (i in 1:length(n_dat)){
+      n_dat[[i]] <- dat[[i+1]]
+      names(n_dat)[i] <- names(dat)[i+1]
+    }
+    dat <- n_dat
+  } else {
+    cons <- ancestor
+  }
+  return(list('cons' = cons,
+              'dat' = dat))
+}
+
+
 #' Removes hypermutation from sequence data
 #'
 #' @param dat The sequence data
 #' @param verbose Prints name and p-value of removed/fixed sequences
 #' @param fix_with Either false or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.
+#' @param ancestor Either 'consensus' to indicate that the consensus sequences must be computed, or 'first' to indicate that the first sequence in the dataset should be considered to be the ancestral sequence, or the ancestral sequence itself.
 #' @export
 
-remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE){
-  cons_ints <- apply(consensusMatrix_seqinr(dat), 2, function(x){which(x == max(x))[1]})
-  cons <- paste(row.names(consensusMatrix_seqinr(dat))[cons_ints], collapse = '')
-  rm(cons_ints)
+remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE, ancestor = 'consensus'){
+  cons <- ancestor_processing(ancestor, dat)
 
   results <- NULL
   hypermutants <- NULL

@@ -8,8 +8,8 @@ Depends:
     R (>= 3.2.3),
     ape,
     ade4,
-    seqinr,
     optparse,
+    seqinr,
     testthat
 License: GPLv3
 LazyData: true
