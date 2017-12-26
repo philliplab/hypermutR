@@ -158,3 +158,9 @@ test_that("scan_seq fixes sequences correctly", {
   expect_true(all(tolower(result$the_seq) %in% c(letters, '-')))
   expect_true('r' %in% result$the_seq)
 })
+
+test_that("scan_seq requires the consensus and the sequence to be of equal length", {
+  the_seq <- "CCAA"
+  the_con <- "CCGAA"
+  expect_error(result <- scan_seq(the_con, the_seq), 'length\\(cons\\) == length\\(the_seq\\) is not TRUE')
+})

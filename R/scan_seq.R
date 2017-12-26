@@ -13,6 +13,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
   }
   cons <- strsplit(toupper(cons), '')[[1]]
   the_seq <- strsplit(toupper(the_seq), '')[[1]]
+  stopifnot(length(cons) == length(the_seq))
   num.potential.mut <- 0
   num.mut <- 0
   num.potential.control <- 0
@@ -22,7 +23,6 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
   for( window.start.i in 1:(length(cons) - 2) ) {
       context.indx1 <- 1
       context.indx2 <- 2
-
 
       # if the window has any gaps in either sequence, skip it.
       # print(window.start.i)
@@ -121,6 +121,3 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
               the_seq = the_seq)
   )
 }
-
-
-
