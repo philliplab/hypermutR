@@ -8,6 +8,7 @@ option_list <- list(
   make_option("--output_file", 
               help = "Path and name of output file"),
   make_option("--p_value",
+              default = 0.05,
               help = "The p-value to apply to the one-sided fischer test"),
   make_option("--ancestor",
               default = "consensus",
@@ -28,7 +29,7 @@ suppressPackageStartupMessages(library("hypermutR"))
 if(is.null(opt$fix_with)){opt$fix_with <- FALSE}
 
 dat <- read.fasta(opt$file_name)
-cdat <- remove_hypermut(dat, ancestor = opt$ancestor, fix_with=opt$fix_with)
+cdat <- remove_hypermut(dat, ancestor = opt$ancestor, fix_with=opt$fix_with, p_value = opt$p_value)
 names(cdat)
 write.fasta(cdat$seq_result, names(cdat$seq_result), opt$output_name)
 if (!is.null(cdat$seq_hypermutants)){

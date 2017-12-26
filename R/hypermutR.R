@@ -30,9 +30,10 @@ ancestor_processing <- function(ancestor, dat){
 #' @param verbose Prints name and p-value of removed/fixed sequences
 #' @param fix_with Either false or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.
 #' @param ancestor Either 'consensus' to indicate that the consensus sequences must be computed, or 'first' to indicate that the first sequence in the dataset should be considered to be the ancestral sequence, or the ancestral sequence itself.
+#' @param p_value The p-value used by the one-sided fischer test.
 #' @export
 
-remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE, ancestor = 'consensus'){
+remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE, ancestor = 'consensus', p_value = 0.05){
   cons <- ancestor_processing(ancestor, dat)
 
   results <- NULL
@@ -50,7 +51,7 @@ remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE, ancestor = 'c
                                    result_scan$all_mut_pos))
     }
     all_mut_pos <- rbind(all_mut_pos, c_all_mut_pos)
-    if (result_scan$p.value < 0.1){
+    if (result_scan$p.value < p_value){
       if (verbose) {
         if (fix_with != FALSE) {
           print(paste("Fixing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p.value, ". Replacing hypermutated positions with ", fix_with, ". Sequences will be left in the seq_results element of the return list and will also appear in the seq_hypermutants element.", sep = ''))
