@@ -17,7 +17,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
   num_potential_mut <- 0
   num_mut <- 0
   num_potential_control <- 0
-  num.control <- 0
+  num_control <- 0
   all_mut_pos <- NULL
 
   for( window.start.i in 1:(length(cons) - 2) ) {
@@ -107,14 +107,14 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
 
           if( control_muted ) { 
               # If G -> A mutation occureed
-              num.control <- num.control + 1;
+              num_control <- num_control + 1;
           }
       }
   } # for window.start.i
-  p_value <- fisher.test( matrix( c( num.control, ( num_potential_control - num.control ), num_mut, ( num_potential_mut - num_mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
+  p_value <- fisher.test( matrix( c( num_control, ( num_potential_control - num_control ), num_mut, ( num_potential_mut - num_mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
   return(list(num_mut = num_mut,
               num_potential_mut = num_potential_mut,
-              num.control = num.control,
+              num_control = num_control,
               num_potential_control = num_potential_control,
               p_value = p_value,
               all_mut_pos = all_mut_pos,
