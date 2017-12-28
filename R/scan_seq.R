@@ -20,12 +20,12 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
   num_control <- 0
   all_mut_pos <- NULL
 
-  for( window.start.i in 1:(length(cons) - 2) ) {
-      context.indx1 <- 1
-      context.indx2 <- 2
+  for( window_start_i in 1:(length(cons) - 2) ) {
+      context_indx1 <- 1
+      context_indx2 <- 2
 
       # if the window has any gaps in either sequence, skip it.
-      # print(window.start.i)
+      # print(window_start_i)
       # Do not have to check position 0 for gaps since they will fail the == 'g' or == 'a' tests
 
       # Move the context forward if gaps are encountered to ensure that the
@@ -34,40 +34,40 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
       # Lots of IFs to prevent attempting to access values outside of the
       # valid range
       # I am sure that this can be done more elegantly...
-      while( as.character( the_seq[ window.start.i + context.indx1 ] ) == "-" ){
-          context.indx1 <- context.indx1 + 1
-          context.indx2 <- context.indx2 + 1
+      while( as.character( the_seq[ window_start_i + context_indx1 ] ) == "-" ){
+          context_indx1 <- context_indx1 + 1
+          context_indx2 <- context_indx2 + 1
 
-          if (window.start.i + context.indx2 > length(cons)){
+          if (window_start_i + context_indx2 > length(cons)){
             break
           }
       }
-      if (window.start.i + context.indx2 > length(cons)){
+      if (window_start_i + context_indx2 > length(cons)){
         next
       }
-      while( as.character( the_seq[ window.start.i + context.indx2 ] ) == "-" ){
-          context.indx2 <- context.indx2 + 1
-          if (window.start.i + context.indx2 > length(cons)){
+      while( as.character( the_seq[ window_start_i + context_indx2 ] ) == "-" ){
+          context_indx2 <- context_indx2 + 1
+          if (window_start_i + context_indx2 > length(cons)){
             break
           }
       }
-      if (window.start.i + context.indx2 > length(cons)){
+      if (window_start_i + context_indx2 > length(cons)){
         next
       }
 
       # Check for hypermutated spots
-      if( ( cons[window.start.i + 0 ] == "G" ) && 
+      if( ( cons[window_start_i + 0 ] == "G" ) && 
             # Reference must mutate from G
-          ( the_seq[window.start.i + context.indx1 ] %in% c( "A", "G" ) ) && 
+          ( the_seq[window_start_i + context_indx1 ] %in% c( "A", "G" ) ) && 
             # Context position 1 must match R = [AG] in query
-          ( the_seq[window.start.i + context.indx2 ] %in% c( "A", "G", "T" ) ) ){ 
+          ( the_seq[window_start_i + context_indx2 ] %in% c( "A", "G", "T" ) ) ){ 
             # Context position 2 must match D = [AGT] in query
           num_potential_mut <- num_potential_mut + 1;
-          hyper_muted <- as.character( the_seq[ window.start.i + 0 ] ) == "A"
+          hyper_muted <- as.character( the_seq[ window_start_i + 0 ] ) == "A"
           all_mut_pos <- rbind(all_mut_pos,
-            data.frame(pos = window.start.i,
-                       base.in.query = as.character( the_seq[ window.start.i + 0 ] ),
-                       full_seq = paste(as.character( the_seq[ window.start.i + c(0, context.indx1, context.indx2) ] ), 
+            data.frame(pos = window_start_i,
+                       base.in.query = as.character( the_seq[ window_start_i + 0 ] ),
+                       full_seq = paste(as.character( the_seq[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
                                         sep = '', collapse = ''),
                        type = 'mut',
                        muted = hyper_muted,
@@ -77,27 +77,27 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
               # If G -> A mutation occurred
               num_mut <- num_mut + 1;
               if ( fix_with != FALSE ) {
-                the_seq[ window.start.i ] <- fix_with
+                the_seq[ window_start_i ] <- fix_with
               }
           }
       }
       # Check for control spots
-      if( ( cons[ window.start.i + 0 ] == "G" ) && 
+      if( ( cons[ window_start_i + 0 ] == "G" ) && 
           # Reference must mutate from G
-          ( ( ( the_seq[ window.start.i + context.indx1 ] %in% c( "C", "T" ) ) && 
+          ( ( ( the_seq[ window_start_i + context_indx1 ] %in% c( "C", "T" ) ) && 
                 # Option 1 Context position 1 must match Y = [CT] in query
-              ( the_seq[ window.start.i + context.indx2 ] %in% c( "A", "C", "G", "T" ) )) || 
+              ( the_seq[ window_start_i + context_indx2 ] %in% c( "A", "C", "G", "T" ) )) || 
                 # Option 1 Context position 2 must match N = [ACGT] in query
-            ( ( the_seq[ window.start.i + context.indx1 ] %in% c( "A", "G" ) ) && 
+            ( ( the_seq[ window_start_i + context_indx1 ] %in% c( "A", "G" ) ) && 
                 # Option 2 Context position 1 must match R = [AG] in query
-              ( the_seq[ window.start.i + context.indx2 ] ) == "C" ) ) ){ 
+              ( the_seq[ window_start_i + context_indx2 ] ) == "C" ) ) ){ 
                 # Option 2 Context position 2 must match C in query
           num_potential_control <- num_potential_control + 1;
-          control_muted <- as.character( the_seq[ window.start.i + 0 ] ) == "A"
+          control_muted <- as.character( the_seq[ window_start_i + 0 ] ) == "A"
           all_mut_pos <- rbind(all_mut_pos,
-            data.frame(pos = window.start.i,
-                       base.in.query = as.character( the_seq[ window.start.i + 0 ] ),
-                       full_seq = paste(as.character( the_seq[ window.start.i + c(0, context.indx1, context.indx2) ] ), 
+            data.frame(pos = window_start_i,
+                       base.in.query = as.character( the_seq[ window_start_i + 0 ] ),
+                       full_seq = paste(as.character( the_seq[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
                                         sep = '', collapse = ''),
                        type = 'pot',
                        muted = control_muted,
@@ -110,7 +110,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
               num_control <- num_control + 1;
           }
       }
-  } # for window.start.i
+  } # for window_start_i
   p_value <- fisher.test( matrix( c( num_control, ( num_potential_control - num_control ), num_mut, ( num_potential_mut - num_mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
   return(list(num_mut = num_mut,
               num_potential_mut = num_potential_mut,
