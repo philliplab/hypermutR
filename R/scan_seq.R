@@ -66,7 +66,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
           hyper_muted <- as.character( the_seq[ window_start_i + 0 ] ) == "A"
           all_mut_pos <- rbind(all_mut_pos,
             data.frame(pos = window_start_i,
-                       base.in.query = as.character( the_seq[ window_start_i + 0 ] ),
+                       base_in_query = as.character( the_seq[ window_start_i + 0 ] ),
                        full_seq = paste(as.character( the_seq[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
                                         sep = '', collapse = ''),
                        type = 'mut',
@@ -96,7 +96,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
           control_muted <- as.character( the_seq[ window_start_i + 0 ] ) == "A"
           all_mut_pos <- rbind(all_mut_pos,
             data.frame(pos = window_start_i,
-                       base.in.query = as.character( the_seq[ window_start_i + 0 ] ),
+                       base_in_query = as.character( the_seq[ window_start_i + 0 ] ),
                        full_seq = paste(as.character( the_seq[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
                                         sep = '', collapse = ''),
                        type = 'pot',
