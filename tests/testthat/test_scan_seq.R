@@ -12,7 +12,7 @@ test_that("scan_seq works", {
   expect_equal(result$num_mut, 43)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 0)
-  expect_equal(result$num.potential.control, 44)
+  expect_equal(result$num_potential_control, 44)
   expect_equal(result$p_value, 1.50657928786482e-25)
   expect_equal(fisher.test(matrix(c(0, 44, 43, 0),
                                   nrow = 2,
@@ -26,7 +26,7 @@ test_that("scan_seq works", {
   expect_equal(result$num_mut, 0)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 44)
-  expect_equal(result$num.potential.control, 44)
+  expect_equal(result$num_potential_control, 44)
   expect_equal(result$p_value, 1)
   expect_equal(fisher.test(matrix(c(44, 0, 0, 43),
                                   nrow = 2,
@@ -39,7 +39,7 @@ test_that("scan_seq works", {
   expect_equal(result$num_mut, 0)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 0)
-  expect_equal(result$num.potential.control, 44)
+  expect_equal(result$num_potential_control, 44)
   expect_equal(result$p_value, 1)
   expect_equal(fisher.test(matrix(c(0, 44, 0, 43),
                                   nrow = 2,
@@ -53,7 +53,7 @@ test_that("scan_seq works", {
   expect_equal(result$num_mut, 43)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 44)
-  expect_equal(result$num.potential.control, 44)
+  expect_equal(result$num_potential_control, 44)
   expect_equal(result$p_value, 1)
   expect_equal(fisher.test(matrix(c(44, 0, 0, 43),
                                   nrow = 2,
@@ -67,7 +67,7 @@ test_that("scan_seq works", {
   expect_equal(result$num_mut, 21)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 22)
-  expect_equal(result$num.potential.control, 44)
+  expect_equal(result$num_potential_control, 44)
   expect_equal(result$p_value, 0.626499558301043)
   expect_equal(fisher.test(matrix(c(22, 22, 21, 22),
                                   nrow = 2,
@@ -81,7 +81,7 @@ test_that("scan_seq works", {
   expect_equal(result$num_mut, 21)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 0)
-  expect_equal(result$num.potential.control, 44)
+  expect_equal(result$num_potential_control, 44)
   expect_equal(result$p_value, 1.38814127000831e-08)
   expect_equal(fisher.test(matrix(c(0, 44, 21, 22),
                                   nrow = 2,
@@ -95,7 +95,7 @@ test_that("scan_seq works", {
   expect_equal(result$num_mut, 0)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 22)
-  expect_equal(result$num.potential.control, 44)
+  expect_equal(result$num_potential_control, 44)
   expect_equal(result$p_value, 1)
   expect_equal(fisher.test(matrix(c(22, 44, 0, 43),
                                   nrow = 2,
@@ -120,32 +120,32 @@ test_that("scan_seq detects the correct positions", {
 test_that("scan_seq handles gaps correctly", {
   the_seq <- "--GAA"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CCG--AA"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CGA-T"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 2)
 
   the_seq <- "--GCA"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CCG--AC"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CGC-C"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 2)
 })
 
