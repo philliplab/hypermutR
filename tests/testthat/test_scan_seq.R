@@ -10,7 +10,7 @@ test_that("scan_seq works", {
   query_seq <- sim_hyper(cons_seq, 1, 'all', 0, seed = 1)
   result <- scan_seq(cons_seq, query_seq)
   expect_equal(result$num.mut, 43)
-  expect_equal(result$num.potential.mut, 43)
+  expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 0)
   expect_equal(result$num.potential.control, 44)
   expect_equal(result$p_value, 1.50657928786482e-25)
@@ -24,7 +24,7 @@ test_that("scan_seq works", {
   query_seq <- sim_hyper(cons_seq, 1, 0, 'all', seed = 2)
   result <- scan_seq(cons_seq, query_seq)
   expect_equal(result$num.mut, 0)
-  expect_equal(result$num.potential.mut, 43)
+  expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 44)
   expect_equal(result$num.potential.control, 44)
   expect_equal(result$p_value, 1)
@@ -37,7 +37,7 @@ test_that("scan_seq works", {
   # no mutations
   result <- scan_seq(cons_seq, cons_seq)
   expect_equal(result$num.mut, 0)
-  expect_equal(result$num.potential.mut, 43)
+  expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 0)
   expect_equal(result$num.potential.control, 44)
   expect_equal(result$p_value, 1)
@@ -51,7 +51,7 @@ test_that("scan_seq works", {
   query_seq <- sim_hyper(cons_seq, 1, 'all', 'all', seed = 3)
   result <- scan_seq(cons_seq, query_seq)
   expect_equal(result$num.mut, 43)
-  expect_equal(result$num.potential.mut, 43)
+  expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 44)
   expect_equal(result$num.potential.control, 44)
   expect_equal(result$p_value, 1)
@@ -65,7 +65,7 @@ test_that("scan_seq works", {
   query_seq <- sim_hyper(cons_seq, 1, .5, .5, seed = 3)
   result <- scan_seq(cons_seq, query_seq)
   expect_equal(result$num.mut, 21)
-  expect_equal(result$num.potential.mut, 43)
+  expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 22)
   expect_equal(result$num.potential.control, 44)
   expect_equal(result$p_value, 0.626499558301043)
@@ -79,7 +79,7 @@ test_that("scan_seq works", {
   query_seq <- sim_hyper(cons_seq, 1, .5, 0, seed = 3)
   result <- scan_seq(cons_seq, query_seq)
   expect_equal(result$num.mut, 21)
-  expect_equal(result$num.potential.mut, 43)
+  expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 0)
   expect_equal(result$num.potential.control, 44)
   expect_equal(result$p_value, 1.38814127000831e-08)
@@ -93,7 +93,7 @@ test_that("scan_seq works", {
   query_seq <- sim_hyper(cons_seq, 1, 0, .5, seed = 3)
   result <- scan_seq(cons_seq, query_seq)
   expect_equal(result$num.mut, 0)
-  expect_equal(result$num.potential.mut, 43)
+  expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num.control, 22)
   expect_equal(result$num.potential.control, 44)
   expect_equal(result$p_value, 1)
@@ -120,32 +120,32 @@ test_that("scan_seq detects the correct positions", {
 test_that("scan_seq handles gaps correctly", {
   the_seq <- "--GAA"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CCG--AA"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CGA-T"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
   expect_equal(result$all_mut_pos$pos, 2)
 
   the_seq <- "--GCA"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CCG--AC"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CGC-C"
   result <- scan_seq(the_seq, the_seq)
-  expect_equal(result$num.potential.mut + result$num.potential.control, 1)
+  expect_equal(result$num_potential_mut + result$num.potential.control, 1)
   expect_equal(result$all_mut_pos$pos, 2)
 })
 

@@ -61,14 +61,12 @@ remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE, ancestor = 'c
       }
       hypermutants <- rbind(hypermutants,
         data.frame(seq_name = ddat[[i]]$dup_names,
-# fix_with                   the_seq = ddat[[i]]$the_seq,
                    the_seq = tolower(paste(result_scan$the_seq, collapse = '')),
                    stringsAsFactors = FALSE)
         )
     } else {
       results <- rbind(results,
         data.frame(seq_name = ddat[[i]]$dup_names,
-# fix_with                   the_seq = ddat[[i]]$the_seq,
                    the_seq = tolower(paste(result_scan$the_seq, collapse = '')),
                    stringsAsFactors = FALSE)
       )
@@ -99,14 +97,4 @@ remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE, ancestor = 'c
          seq_hypermutants = hypermutants_list,
          all_mut_pos = all_mut_pos)
     )
-  if (FALSE){
-    # TEMP store for testing/debugging code
-    # to be moved to unit tests sooner
-    dat <- read.fasta('/home/phillipl/projects/hack_hypermut/KID141.fasta')
-    dat <- read.fasta('/fridge/data/methods_paper/profiles/profile.fasta')
-    remove_hypermut(ld_seqs)
-    dat <- sim_hyper(ld_seqs, 20, 0.8, 0, verbose = TRUE)
-    dat <- ld_seqs
-    i <- 1
-  }
 }

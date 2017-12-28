@@ -14,7 +14,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
   cons <- strsplit(toupper(cons), '')[[1]]
   the_seq <- strsplit(toupper(the_seq), '')[[1]]
   stopifnot(length(cons) == length(the_seq))
-  num.potential.mut <- 0
+  num_potential_mut <- 0
   num.mut <- 0
   num.potential.control <- 0
   num.control <- 0
@@ -62,7 +62,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
             # Context position 1 must match R = [AG] in query
           ( the_seq[window.start.i + context.indx2 ] %in% c( "A", "G", "T" ) ) ){ 
             # Context position 2 must match D = [AGT] in query
-          num.potential.mut <- num.potential.mut + 1;
+          num_potential_mut <- num_potential_mut + 1;
           hyper_muted <- as.character( the_seq[ window.start.i + 0 ] ) == "A"
           all_mut_pos <- rbind(all_mut_pos,
             data.frame(pos = window.start.i,
@@ -111,9 +111,9 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
           }
       }
   } # for window.start.i
-  p_value <- fisher.test( matrix( c( num.control, ( num.potential.control - num.control ), num.mut, ( num.potential.mut - num.mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
+  p_value <- fisher.test( matrix( c( num.control, ( num.potential.control - num.control ), num.mut, ( num_potential_mut - num.mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
   return(list(num.mut = num.mut,
-              num.potential.mut = num.potential.mut,
+              num_potential_mut = num_potential_mut,
               num.control = num.control,
               num.potential.control = num.potential.control,
               p_value = p_value,
