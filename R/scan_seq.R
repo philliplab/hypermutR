@@ -14,6 +14,16 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
   cons <- strsplit(toupper(cons), '')[[1]]
   the_seq <- strsplit(toupper(the_seq), '')[[1]]
   stopifnot(length(cons) == length(the_seq))
+  if( length(cons) < 3){
+    return(list(num_mut = 0,
+                num_potential_mut = 0,
+                num_control = 0,
+                num_potential_control = 0,
+                p_value = 1,
+                all_mut_pos = NULL,
+                the_seq = cons)
+    )
+  }
   num_potential_mut <- 0
   num_mut <- 0
   num_potential_control <- 0

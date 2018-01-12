@@ -164,3 +164,15 @@ test_that("scan_seq requires the consensus and the sequence to be of equal lengt
   the_con <- "CCGAA"
   expect_error(result <- scan_seq(the_con, the_seq), 'length\\(cons\\) == length\\(the_seq\\) is not TRUE')
 })
+
+test_that("scan_seq handles short sequences", {
+  short_target_result <- structure(list(num_mut = 0, num_potential_mut = 0, num_control = 0,
+    num_potential_control = 0, p_value = 1, all_mut_pos = NULL,
+    the_seq = c("A", "A", "A")), .Names = c("num_mut", "num_potential_mut",
+"num_control", "num_potential_control", "p_value", "all_mut_pos",
+"the_seq"))
+  short_target_result$the_seq <- 'A'
+  expect_equal(scan_seq("A", "A"), short_target_result)
+  short_target_result$the_seq <- c('G', 'G')
+  expect_equal(scan_seq("GG", "GG"), short_target_result)
+})
