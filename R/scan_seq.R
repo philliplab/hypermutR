@@ -1,9 +1,19 @@
-#' Scans over sequences finding changes around given patterns
+#' Sequence scanner
+#' 
+#' @description Scans over sequences finding changes around given patterns
+#'
+#' @details The scan_seq function simultaneously passes two sliding windows along the ancestral and query sequences. The sliding window is of length 3, corresponding to the potentially hypermutated position and the 2 downstream positions. At each position, the size of the window is increased until it covers 3 non-gap characters in the query sequence. If a G is located at the first position of the window, the position is considered a position of interest and the query sequence is inspected to classify it as either a hypermutation or control position, incrementing either the num_potential_mut variable or the num_potential_control variable. The query sequence is checked next and if the G mutated to an A, then the tally of the number of possible hypermutations (num_mut) or the number of control mutations (num_control) is incremented. 
 #'
 #' @param cons The ancestral sequences to compare against
 #' @param the_seq The query sequence
 #' @param the_pattern The pattern to sequence for. Valid values: 'hyper' and 'control'
 #' @param fix_with Either false or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.
+#'
+#' @return The return value from scan_seq is a list that contains the number of mutated hypermutation and control positions, the total number of potential hypermutation and control positions, the p-value of the one-sided Fischer exact test, the (possibly corrected) query sequence and the data.frame that catalogs each individual position.
+#'
+#' @examples
+#' scan_seq(paste(as.character(hd_seqs[1][[1]]), collapse = ''), paste(as.character(hd_seqs[2][[1]]), collapse = ''))
+#'
 #' @export
 
 scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
