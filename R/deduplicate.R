@@ -1,11 +1,20 @@
 #' Deduplicates sequence data
 #'
+#' @description Deduplicates sequence data
+#'
+#' @details
+#' The dataset is converted to a vector of character strings and the unique sequences are selected with the unique function. Looping over the unique sequences, a list is constructed in which each element corresponds to a unique sequence. Each element is also a list with the elements the_seq containing the actual sequences and dup_names, a vector of character strings listing the names of all sequences that matches the unique sequences stored in the_seq.
+#' @param dat The sequence data (SeqFastadna)
+#'
 #' @return A list in which each unique sequence has an entry consisting of:
 #' 1. the_seq containing the sequence as a character string.
 #' 2. dup_names which is a character vector of the headers of all the
 #'    sequences that had that exact sequence.
 #'
-#' @param dat The sequence data (SeqFastadna)
+#' @examples
+#' deduplicate_seqs(ld_seqs)
+#' deduplicate_seqs(c('aaa', 'aaa', 'aab'))
+#'
 #' @export
 
 deduplicate_seqs <- function(dat){
@@ -20,6 +29,7 @@ deduplicate_seqs <- function(dat){
   }
   ndat <- as.character(dat)
   names(ndat) <- names(dat)
+  if (is.null(names(ndat))){stop('Vector must be named, use unique function instead')}
   dat <- ndat
   udat <- sort(unique(dat))
   

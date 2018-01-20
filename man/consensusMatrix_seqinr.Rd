@@ -25,6 +25,8 @@ This function can handle upper and lower case input, but will only produce upper
 To prevent a dependency on a bioconductor package, this is not properly set
 up as a method for the consensusMatrix generic defined in Biostrings, but
 rather uses a hacky name.
+
+This is an inefficient implementation.
 }
 \examples{
 consensusMatrix_seqinr(ld_seqs)

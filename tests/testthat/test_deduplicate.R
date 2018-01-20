@@ -23,3 +23,6 @@ test_that("deduplicate_seqs works on the list based seqinr format", {
   }
 })
 
+test_that("deduplicate_seqs breaks on unnamed vectors", {
+  expect_error(deduplicate_seqs(c('a','a','b')), "Vector must be named, use unique function instead")
+})
