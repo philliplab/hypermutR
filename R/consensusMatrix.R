@@ -1,5 +1,8 @@
-#' Tallies characters at each position
+#' Computes a consensus matrix.
 #'
+#' @description Tallies characters at each position for a set of character vectors without any Bioconductor packages.
+#'
+#' @details
 #' Designed to function like consensusMatrix from Biostrings.
 #'
 #' Note that seqinr uses lower case letters and Biostrings uses upper case letters.
@@ -10,7 +13,13 @@
 #' up as a method for the consensusMatrix generic defined in Biostrings, but
 #' rather uses a hacky name.
 #'
+#' This is an inefficient implementation.
+#'
 #' @param x The sequence data of type SeqFastadna
+#' @return A matrix with columns representing positions in the sequence and rows the allowed characters in IUPAC notation of nucleotides and cells the counts of the respective character at the respective position.
+#'
+#' @examples
+#' consensusMatrix_seqinr(ld_seqs)
 #' @export
 
 consensusMatrix_seqinr <- function(x, ...){
