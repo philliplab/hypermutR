@@ -2,7 +2,7 @@
 % Please edit documentation in R/hypermutR.R
 \name{ancestor_processing}
 \alias{ancestor_processing}
-\title{Internal function to resolve the ancestor argument of remove_hypermut}
+\title{Resolve the ancestor argument of remove_hypermut}
 \usage{
 ancestor_processing(ancestor, dat)
 }
@@ -11,6 +11,20 @@ ancestor_processing(ancestor, dat)
 
 \item{dat}{The sequence data}
 }
+\value{
+A list with two elements:
+\describe{
+  \item{cons}{The ancestral sequence. Originally, only the consensus sequence option was supported, hence it is called 'cons' for historical reasons.}
+  \item{dat}{The sequence dataset. The dataset that was passed into this function via the dat parameter with the first sequence removed in the case of the 'first' option and unaltered in case of the other two options.}
+}
+}
 \description{
-Internal function to resolve the ancestor argument of remove_hypermut
+A simple function that resolves the ancestor argument passed to the remove_hypermut function.
+}
+\details{
+Three options exists for specifying the ancestral sequence to compare the query sequences in the dataset to. If the value ‘consensus’ is specified via the ancestor parameter, a consensus sequence will be computed from the sequences in the input file. The letter that most frequently occurs is placed in the consensus sequence. In the case of ties, the first letter, when arranged alphabetically, is used. The second option is to include the ancestral sequence as the first sequence in the input file and to set the value of the ancestor parameter to ‘first’. In this case, the first sequence will be removed from the dataset before proceeding. Lastly, the ancestor parameter can be assigned the ancestral sequence itself. The only validation that is performed on the last of the three options is to check that the sequence assigned to ancestor has the same length as the sequences in the input file.
+}
+\examples{
+ancestors <- ancestor_processing('consensus', ld_seqs)
+print(ancestors$cons)
 }

@@ -19,7 +19,7 @@ remove_hypermut(dat, verbose = TRUE, fix_with = FALSE,
 \item{p_value}{The p-value used by the one-sided fischer test.}
 }
 \value{
-A list with three elements. 
+A list with three elements:
 \describe{
   \item{all_mut_pos}{A data.frame that contains all the positions in all the sequences that are either a hypermutation or control position.}
   \item{seq_results}{A list that stores all the sequences that did not contain any hypermutation and, in the case that the fix_with parameter was set, those sequences with hypermutation that was corrected.}

@@ -1,7 +1,24 @@
-#' Internal function to resolve the ancestor argument of remove_hypermut
+#' Resolve the ancestor argument of remove_hypermut
 #'
+#' @description
+#' A simple function that resolves the ancestor argument passed to the remove_hypermut function.
+#'
+#' @details
+#' Three options exists for specifying the ancestral sequence to compare the query sequences in the dataset to. If the value ‘consensus’ is specified via the ancestor parameter, a consensus sequence will be computed from the sequences in the input file. The letter that most frequently occurs is placed in the consensus sequence. In the case of ties, the first letter, when arranged alphabetically, is used. The second option is to include the ancestral sequence as the first sequence in the input file and to set the value of the ancestor parameter to ‘first’. In this case, the first sequence will be removed from the dataset before proceeding. Lastly, the ancestor parameter can be assigned the ancestral sequence itself. The only validation that is performed on the last of the three options is to check that the sequence assigned to ancestor has the same length as the sequences in the input file.
+#' 
 #' @param ancestor Either 'consensus' to indicate that the consensus sequences must be computed, or 'first' to indicate that the first sequence in the dataset should be considered to be the ancestral sequence, or the ancestral sequence itself.
 #' @param dat The sequence data
+#'
+#' @return A list with two elements:
+#' \describe{
+#'   \item{cons}{The ancestral sequence. Originally, only the consensus sequence option was supported, hence it is called 'cons' for historical reasons.}
+#'   \item{dat}{The sequence dataset. The dataset that was passed into this function via the dat parameter with the first sequence removed in the case of the 'first' option and unaltered in case of the other two options.}
+#' }
+#'
+#' @examples
+#' ancestors <- ancestor_processing('consensus', ld_seqs)
+#' print(ancestors$cons)
+#' @export
 
 ancestor_processing <- function(ancestor, dat){
   if (tolower(ancestor == 'consensus')){
@@ -46,7 +63,7 @@ ancestor_processing <- function(ancestor, dat){
 #' @param ancestor Either 'consensus' to indicate that the consensus sequences must be computed, or 'first' to indicate that the first sequence in the dataset should be considered to be the ancestral sequence, or the ancestral sequence itself.
 #' @param p_value The p-value used by the one-sided fischer test.
 #'
-#' @return A list with three elements. 
+#' @return A list with three elements:
 #' \describe{
 #'   \item{all_mut_pos}{A data.frame that contains all the positions in all the sequences that are either a hypermutation or control position.}
 #'   \item{seq_results}{A list that stores all the sequences that did not contain any hypermutation and, in the case that the fix_with parameter was set, those sequences with hypermutation that was corrected.}
