@@ -6,12 +6,36 @@
 \title{High diversity sequence sample}
 \format{A SeqFastadna object from library seqinr}
 \source{
-Simulated based on samples from the Molecular Clock Project
+Based on sample HVTN503-162450071-1056 from the HVTN 503/Phambili study (Gray et al. Lancet Infect Dis. 2011).
 }
 \usage{
 hd_seqs
 }
 \description{
-High diversity sequence sample
+The HVTN 503/Phambili study (Gray et al. Lancet Infect Dis. 2011) followed
+HIV negative subjects monitoring for HIV-1 infection. To produce
+this dataset, we took the PID Illumina MiSeq sequence data from the sample
+HVTN503-162450071-1056 and built phylogenetic trees with RAxML. The
+following RAxML settings were used:
+\describe{
+  \item{-f a}{Perform rapid bootstrap analysis and search for the best-scoring maximum likelihood tree in one program run.}
+  \item{-x 12345}{Seed for the random number generator used by the rapid bootstrap analysis.}
+  \item{-p 12345}{Seed for the random number generator used in the parsimony inferences.}
+  \item{-# 100}{The number of bootstrap analyses to run on distinct starting trees.}
+  \item{-m GTRGAMMA}{The model used for the nucleotide substitutions. The general time reversible model with optimization of the substitution rates and the GAMMA model of rate heterogeneity.}
+}
+Using the tree produced by RAxML, a random subtype-C sequence was selected
+(referred to as the seed sequence) from LANL (C.ZA.08.707PKE34F2.HM623575),
+restricted to the same amplicon as the real dataset and mutated according to
+these trees.  To simulate test data, the tree were loaded into R in a
+data.frame in which each row represents an edge. The data.frame contain
+three columns, the first one listing the ancestor, the second one listing
+the descendant and the last one the length of the edge. The simulation is
+initiated by assigning the seed sequence to the descendant in the first row
+of the dataset. The ancestor is then constructed by randomly mutating the
+seed sequence until it diverged by the edge length. The newly simulated
+ancestor sequence is the used to generate the other sequences that are
+directly related to it. This process is continued until all the sequences in
+the entire tree (including the internal nodes) are generated. Extra variability was introduced into this dataset by multiplying all the branch lengths by 2.
 }
 \keyword{datasets}
