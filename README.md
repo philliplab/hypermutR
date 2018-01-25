@@ -1,94 +1,120 @@
-Very very rough notes about implementation
-==========================================
+hypermutR
+=========
 
-## Rough layout of the functions
+Hypermutation is a phenomena that affects HIV-1 introducing large numbers of
+mutations into some sequences. It manifests in the datasets as sequences in
+which large numbers of Guanine was mutated to Adenine, specifically when that
+Guanine was surrounded by a particular pattern. The hypermut 2.0 tool available
+from https://www.hiv.lanl.gov/content/sequence/HYPERMUT/hypermut.html is a
+frequently used tool to detect and remove hypermutated sequences. We wrote a
+new implementation of the hypermut 2.0 algorithm in R, which is available in
+the hypermutR package on CRAN.
 
-.tallyMutInSeq
-  in
-    context
-    enforce_context: ref query both
-    context_must_match: T F
-    invert_evolution: T F
-    ref_seq
-    query_seq
-  out
-    list(seq_name = list(
-         num_mutated
-         num_not_mutated
-         mutated_pos
-         not_mutated_pos)
-  body
-    loop along ref_seq
-      check_contexts
-      check_hypermut
-      format_results
+The hypermut algorithm compares each sequence in an alignment to some ancestral
+sequence (usually approximated by the consensus sequence of the alignment),
+tallying the frequency of specific mutations. Hypermutation occurs when a G
+which is followed by an A or G (denoted by R in the IUPAC convention) and then
+by an A, G or T (denoted by a D in the IUPAC convention) mutates to an A. More
+compactly, when GRD become ARD, the mutation is flagged as possibly due to
+hypermutation. In order to distinguish between true hypermutation and the
+generally expected level of mutation, a baseline must be established. The
+baseline is established by tallying G to A mutations when the G is followed
+immediately by either a C or T (denoted by a Y in the IUPAC convention) or when
+the G is followed by an A or a G (denoted by R in the IUPAC convention) and
+then a C. More compactly, when GY becomes AY or GRC becomes ARC, the mutations
+are tallied as the baseline mutation rate against which the potential
+hypermutations must be compared. 
 
-tallyHypermut
-  in
-    control_context
-    hypermut_context
-    query_seq -> query_alignment
-    ref_seq -> NULLABLE
-  out
-    add to list:
-      num_mut_hyper + vec of pos
-      num_non_not_hyper + vec of pos
-      same for control
-      p-value
-  body
-    loop over contexts
-      loop over seqs
-        tally_mutations_in_seq
-    loop over seq
-      compute_fisher
-    format_results
+A one-sided Fisher’s exact test is used to compare the proportion of GRD
+positions that became ARD positions to the proportion of GY or GRC positions
+that became either AY or ARC positions. When the p-value of the test is smaller
+than some threshold, with the default set to 0.1 as in (Abrahams et al., 2009),
+then the individual sequence is flagged as a hypermutant and either the
+sequence is removed from the dataset, or the mutated bases (the A’s followed by
+RD) are replaced by an R to indicate that we are uncertain whether the mutation
+was a random mutation or if it was the result of hypermutation.
 
-correctMut
-  not supported until clarity about mutation direction
+In order to be a position of interest (either a control or hypermutation
+position), all that is required is a G in the ancestral sequence. To classify
+the position into either a hypermutation or control position, only the query
+sequence is considered. If the two positions following the position that
+contains the G in the ancestral sequence matches RD, then it is a hypermutation
+position, else it is a control position. The two downstream positions in the
+ancestral sequence are not considered. This implies the assumption that the two
+downstream positions in the ancestral sequence mutates before the position of
+interest.
 
-exclMut
+## Installation Instructions for Ubuntu
 
-dedupForHypermut
+Make sure you have a recent version of R:
+http://stackoverflow.com/questions/10476713/how-to-upgrade-r-in-ubuntu. Follow
+these instructions to set up the correct repositiory for apt.
 
-redupForHypermut
+Make sure that both r-base and r-base-dev is installed
+```{sh}
+sudo apt-get install r-base r-base-dev
+```
 
-hypermutProcessFile
-  read
-  dedup
-  tally
-  ?correct : correct | exclude
-  redup
-  output
+Next, install devtools' depedancies with apt-get:
+```{sh}
+sudo apt-get install libssl-dev libxml2-dev libcurl4-gnutls-dev
+```
 
-## Tests
+Then, from within R, install devtools:
+```{r}
+install.packages('devtools', repo = 'http://cran.rstudio.com/')
+```
 
-The really important part is the tests.
+Finally, install hypermutR:
+From a local file:
 
-A three way comparison is needed, comparing LANL vs Paul's implementation vs a
-control which I understand perfectly.
+```{r}
+library(devtools)
+install_local('/path/to/file/hypermutR_x.y.z.tar.gz')
+```
 
-A key fact to remember: It is a lot less effort to run a small number of big
-files through LANL than a big number of small files - design the tests
-accordingly. This will involve a bit of hacking to play nice with the current
-way the simulation code is setup.
+Please note that you must use install_local from devtools - install.packages
+will not work. Change /path/to/file to the path to the installation file on
+your computer and x.y.z to match the installation file you have.
 
-Simulate the test sequences by chaining a bunch of patterns together seperated
-by gaps.
+Or using the bit_bucket repo:
+```{r}
+library(devtools)
+install_bitbucket('hivdiversity/hypermutR', 
+  auth_user = 'username', password = 'password')
+```
 
-Then run there controls through LANL and save the results:
+Lastly, hypermutR includes a script that can be run from the commandline. You
+need to put this script somewhere convenient ('/usr/bin' for example)
+```{r}
+file.symlink(from = file.path(find.package('hypermutR'), 'hypermutR.R'),
+             to = '/usr/bin')
+```
 
-list(name of imput data,
-     md5sum of input data,
-     data.frame(seq.num, 
-                num.mut, 
-                num.potential.mut, 
-                num.control.mut,
-                num.control.potential.mut))
+## Usage
 
-Use seed values to ensure that the datasets are identical. Later store them as
-.rda files.
+### Within R
 
-Store the LANL results as dput code inside the test scripts and later migrate
-them also to .rda files.
+```{r}
+library(hypermutR)
+help('remove_hypermutation')
+```
 
+This will display the help for the main function in hypermutR.
+
+### From the command line
+
+```{sh}
+hypermutR -h
+```
+
+or (depending on your installation):
+
+```{sh}
+hypermutR.R -h
+```
+
+This will display help for all the options and an example call to MotifBinner.
+
+Good luck.
 
