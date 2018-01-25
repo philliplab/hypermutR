@@ -1,6 +1,6 @@
 Package: hypermutR
 Title: Detects hypermutation in DNA
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Author: Paul Edlefsen <pedlefsen@gmail.com>,
         Phillip Labuschagne <philliplab@gmail.com>
 Description: Follows the algorithm described on the website of the Hypermut tool on LANL to detect hypermutation.
@@ -13,5 +13,7 @@ Depends:
     testthat
 License: GPLv3
 LazyData: true
-Suggests: testthat
+Suggests: testthat,
+    R.rsp
+VignetteBuilder: R.rsp
 RoxygenNote: 6.0.1
