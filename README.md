@@ -46,9 +46,9 @@ interest.
 
 ## Installation Instructions for Ubuntu
 
-Make sure you have a recent version of R:
-http://stackoverflow.com/questions/10476713/how-to-upgrade-r-in-ubuntu. Follow
-these instructions to set up the correct repositiory for apt.
+Make sure you have a recent version of R. Follow
+the instructions in the following link to set up the correct repositiory for apt:
+http://stackoverflow.com/questions/10476713/how-to-upgrade-r-in-ubuntu. 
 
 Make sure that both r-base and r-base-dev is installed
 ```{sh}
@@ -114,7 +114,7 @@ or (depending on your installation):
 hypermutR.R -h
 ```
 
-This will display help for all the options and an example call to MotifBinner.
+This will display help for all the options and an example call to hypermutR.
 
 Good luck.
 
