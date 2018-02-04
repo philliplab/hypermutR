@@ -56,6 +56,12 @@ convert_alignment_to_matrix <- function(dat){
 
 sim_hyper <- function(dat, n1, n2, n3, seed = NULL, verbose = FALSE){
   mdat <- convert_alignment_to_matrix(dat)
+  if (n1 == 'all') {n1 <- length(dat)}
+  if (n1 < 1) {n1 <- floor(length(dat)*n1)}
+  if (n1 > length(dat)){
+    warning('n1 is larger than the number of sequences, setting it to the number of sequences')
+    n1 <- length(dat)
+  }
   if (length(n1) > 1){
     seqs_to_mut <- min(n1, length(dat))
   } else {
