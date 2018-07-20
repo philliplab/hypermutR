@@ -3,7 +3,13 @@
 #' @description Deduplicates sequence data
 #'
 #' @details
-#' The dataset is converted to a vector of character strings and the unique sequences are selected with the unique function. Looping over the unique sequences, a list is constructed in which each element corresponds to a unique sequence. Each element is also a list with the elements the_seq containing the actual sequences and dup_names, a vector of character strings listing the names of all sequences that matches the unique sequences stored in the_seq.
+#' The dataset is converted to a vector of character strings and the unique
+#' sequences are selected with the unique function. Looping over the unique
+#' sequences, a list is constructed in which each element corresponds to a
+#' unique sequence. Each element is also a list with the elements the_seq
+#' containing the actual sequences and dup_names, a vector of character strings
+#' listing the names of all sequences that matches the unique sequences stored
+#' in the_seq.
 #' @param dat The sequence data (SeqFastadna)
 #'
 #' @return A list in which each unique sequence has an entry consisting of:
