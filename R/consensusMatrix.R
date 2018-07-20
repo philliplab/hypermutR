@@ -10,10 +10,7 @@
 #' This function can handle upper and lower case input, but will only produce upper case output.
 #'
 #' To prevent a dependency on a bioconductor package, this is not properly set
-#' up as a method for the consensusMatrix generic defined in Biostrings, but
-#' rather uses a hacky name.
-#'
-#' This is an inefficient implementation.
+#' up as a method for the consensusMatrix generic defined in Biostrings.
 #'
 #' @param x The sequence data of type SeqFastadna
 #' @return A matrix with columns representing positions in the sequence and rows the allowed characters in IUPAC notation of nucleotides and cells the counts of the respective character at the respective position.
