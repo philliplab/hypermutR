@@ -115,6 +115,3 @@ hypermutR.R -h
 ```
 
 This will display help for all the options and an example call to hypermutR.
-
-Good luck.
-
