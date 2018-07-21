@@ -17,8 +17,10 @@
 #'
 #' @param cons The ancestral sequences to compare against
 #' @param the_seq The query sequence
-#' @param the_pattern The pattern to sequence for. Valid values: 'hyper' and 'control'
-#' @param fix_with Either false or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.
+#' @param the_pattern The pattern to sequence for. Valid values: 'hyper' and
+#' 'control'
+#' @param fix_with Either false or a single letter. If not FALSE, then replace
+#' the hypermutated base with the letter indicated.
 #'
 #' @return The return value from scan_seq is a list that contains the number of
 #' mutated hypermutation and control positions, the total number of potential
@@ -73,6 +75,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
       if (window_start_i + context_indx2 > length(cons)){
         next
       }
+
       while( as.character( the_seq[ window_start_i + context_indx2 ] ) == "-" ){
           context_indx2 <- context_indx2 + 1
           if (window_start_i + context_indx2 > length(cons)){
