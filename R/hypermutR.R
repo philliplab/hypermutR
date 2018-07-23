@@ -2,22 +2,26 @@
 #'
 #' @description
 #' A simple function that resolves the ancestor argument passed to the
-#' remove_hypermut function.
+#' \code{remove_hypermut} function.
 #'
 #' @details
 #' Three options exists for specifying the ancestral sequence to compare the
-#' query sequences in the dataset to. If the value ‘consensus’ is specified via
-#' the ancestor parameter, a consensus sequence will be computed from the
-#' sequences in the input file. The letter that most frequently occurs is
-#' placed in the consensus sequence. In the case of ties, the first letter,
-#' when arranged alphabetically, is used. The second option is to include the
-#' ancestral sequence as the first sequence in the input file and to set the
-#' value of the ancestor parameter to ‘first’. In this case, the first sequence
-#' will be removed from the dataset before proceeding. Lastly, the ancestor
-#' parameter can be assigned the ancestral sequence itself. The only validation
-#' that is performed on the last of the three options is to check that the
-#' sequence assigned to ancestor has the same length as the sequences in the
-#' input file.
+#' query sequences in the dataset to. 
+#' \describe{
+#'   \item{consensus}{If the value ‘consensus’ is specified via the ancestor
+#'   parameter, a consensus sequence will be computed from the sequences in the
+#'   input file. The letter that most frequently occurs is placed in the
+#'   consensus sequence. In the case of ties, the first letter, when arranged
+#'   alphabetically, is used.}
+#'   \item{first}{Include the ancestral sequence as the first sequence in the
+#'   input file and to set the value of the ancestor parameter to ‘first’. In
+#'   this case, the first sequence will be removed from the dataset before
+#'   proceeding.}
+#'   \item{Ancestral sequence}{The ancestor parameter can be assigned the
+#'   ancestral sequence itself. The only validation that is performed on the
+#'   last of the three options is to check that the sequence assigned to
+#'   ancestor has the same length as the sequences in the input file.}
+#' }
 #' 
 #' @param ancestor Either 'consensus' to indicate that the consensus sequences
 #' must be computed, or 'first' to indicate that the first sequence in the
