@@ -27,15 +27,16 @@ following RAxML settings were used:
 Using the tree produced by RAxML, a random subtype-C sequence was selected
 (referred to as the seed sequence) from LANL (C.ZA.08.707PKE34F2.HM623575),
 restricted to the same amplicon as the real dataset and mutated according to
-these trees.  To simulate test data, the tree were loaded into R in a
-data.frame in which each row represents an edge. The data.frame contain
-three columns, the first one listing the ancestor, the second one listing
+these trees. To simulate test data, the tree was loaded into R in a
+data.frame in which each row represents an edge. The data.frame contains
+three columns, the first one lists the ancestor, the second one lists
 the descendant and the last one the length of the edge. The simulation is
 initiated by assigning the seed sequence to the descendant in the first row
 of the dataset. The ancestor is then constructed by randomly mutating the
 seed sequence until it diverged by the edge length. The newly simulated
 ancestor sequence is the used to generate the other sequences that are
 directly related to it. This process is continued until all the sequences in
-the entire tree (including the internal nodes) are generated. Extra variability was introduced into this dataset by multiplying all the branch lengths by 2.
+the entire tree (including the internal nodes) are generated. Extra variability 
+was introduced into this dataset by multiplying all the branch lengths by 2.
 }
 \keyword{datasets}

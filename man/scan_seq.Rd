@@ -11,18 +11,35 @@ scan_seq(cons, the_seq, the_pattern, fix_with = FALSE)
 
 \item{the_seq}{The query sequence}
 
-\item{the_pattern}{The pattern to sequence for. Valid values: 'hyper' and 'control'}
+\item{the_pattern}{The pattern to sequence for. Valid values: 'hyper' and
+'control'}
 
-\item{fix_with}{Either false or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.}
+\item{fix_with}{Either false or a single letter. If not FALSE, then replace
+the hypermutated base with the letter indicated.}
 }
 \value{
-The return value from scan_seq is a list that contains the number of mutated hypermutation and control positions, the total number of potential hypermutation and control positions, the p-value of the one-sided Fischer exact test, the (possibly corrected) query sequence and the data.frame that catalogs each individual position.
+The return value from scan_seq is a list that contains the number of
+mutated hypermutation and control positions, the total number of potential
+hypermutation and control positions, the p-value of the one-sided Fischer
+exact test, the (possibly corrected) query sequence and the data.frame that
+catalogs each individual position.
 }
 \description{
 Scans over sequences finding changes around given patterns
 }
 \details{
-The scan_seq function simultaneously passes two sliding windows along the ancestral and query sequences. The sliding window is of length 3, corresponding to the potentially hypermutated position and the 2 downstream positions. At each position, the size of the window is increased until it covers 3 non-gap characters in the query sequence. If a G is located at the first position of the window, the position is considered a position of interest and the query sequence is inspected to classify it as either a hypermutation or control position, incrementing either the num_potential_mut variable or the num_potential_control variable. The query sequence is checked next and if the G mutated to an A, then the tally of the number of possible hypermutations (num_mut) or the number of control mutations (num_control) is incremented.
+The scan_seq function simultaneously passes two sliding windows
+along the ancestral and query sequences. The sliding window is of length 3,
+corresponding to the potentially hypermutated position and the 2 downstream
+positions. At each position, the size of the window is increased until it
+covers 3 non-gap characters in the query sequence. If a G is located at the
+first position of the window, the position is considered a position of
+interest and the query sequence is inspected to classify it as either a
+hypermutation or control position, incrementing either the num_potential_mut
+variable or the num_potential_control variable. The query sequence is
+checked next and if the G mutated to an A, then the tally of the number of
+possible hypermutations (num_mut) or the number of control mutations
+(num_control) is incremented.
 }
 \examples{
 scan_seq(paste(as.character(hd_seqs[1][[1]]), collapse = ''), paste(as.character(hd_seqs[2][[1]]), collapse = ''))

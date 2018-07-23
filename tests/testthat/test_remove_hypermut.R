@@ -142,7 +142,6 @@ test_that("remove_hypermut fixes correctly", {
   for (i in 2:length(x$seq_results)){
     expect_equal(x$seq_results[[i]], base_seq)
   }
-
 })
 
 test_that('ancestral sequence specification is processed correctly', {

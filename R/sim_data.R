@@ -1,4 +1,6 @@
-#' Converts a vector of character strings to the read.fasta format
+#' Formats character vector as seqinr::read.fasta
+#'
+#' seqinr's read.fasta returns a list in each element is a SeqFastadna object.
 #'
 #' @param dat Named vector of character strings
 #' @export
@@ -13,7 +15,6 @@ make_list_SeqFastadna <- function(dat){
   }
   dat_l
 }
-
 
 #' Converts an alignment to a matrix
 #'

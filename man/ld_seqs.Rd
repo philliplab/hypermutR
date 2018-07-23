@@ -27,9 +27,9 @@ following RAxML settings were used:
 Using the tree produced by RAxML, a random subtype-C sequence was selected
 (referred to as the seed sequence) from LANL (C.ZA.08.707PKE34F2.HM623575),
 restricted to the same amplicon as the real dataset and mutated according to
-these trees.  To simulate test data, the tree were loaded into R in a
-data.frame in which each row represents an edge. The data.frame contain
-three columns, the first one listing the ancestor, the second one listing
+these trees.  To simulate test data, the tree was loaded into R in a
+data.frame in which each row represents an edge. The data.frame contains
+three columns, the first one lists the ancestor, the second one lists
 the descendant and the last one the length of the edge. The simulation is
 initiated by assigning the seed sequence to the descendant in the first row
 of the dataset. The ancestor is then constructed by randomly mutating the

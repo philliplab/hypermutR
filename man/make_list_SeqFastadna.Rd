@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim_data.R
 \name{make_list_SeqFastadna}
 \alias{make_list_SeqFastadna}
-\title{Converts a vector of character strings to the read.fasta format}
+\title{Formats character vector as seqinr::read.fasta}
 \usage{
 make_list_SeqFastadna(dat)
 }
@@ -10,5 +10,5 @@ make_list_SeqFastadna(dat)
 \item{dat}{Named vector of character strings}
 }
 \description{
-Converts a vector of character strings to the read.fasta format
+seqinr's read.fasta returns a list in each element is a SeqFastadna object.
 }

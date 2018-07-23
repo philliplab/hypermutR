@@ -1,0 +1,11 @@
+citHeader("Please cite the original article that describes the algorithm:")
+
+citEntry(entry = "article",
+  author = c(person("PP", "Rose"), person("BT", "Korber")),
+  title = "Detecting hypermutations in viral sequences with an emphasis on G -> A hypermutation.",
+  journal = "Bioinformatics",
+  year = "2000",
+  number = '16(4)',
+  pages = '400-410',
+  textVersion = "Rose, PP and Korber, BT. 2000. Detecting hypermutations in viral sequences with an emphasis on G -> A hypermutation. Bioinformatics 16(4): 400-401."
+)

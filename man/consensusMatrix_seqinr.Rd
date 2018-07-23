@@ -23,10 +23,7 @@ Note that seqinr uses lower case letters and Biostrings uses upper case letters.
 This function can handle upper and lower case input, but will only produce upper case output.
 
 To prevent a dependency on a bioconductor package, this is not properly set
-up as a method for the consensusMatrix generic defined in Biostrings, but
-rather uses a hacky name.
-
-This is an inefficient implementation.
+up as a method for the consensusMatrix generic defined in Biostrings.
 }
 \examples{
 consensusMatrix_seqinr(ld_seqs)
