@@ -1,18 +1,38 @@
 #' Resolve the ancestor argument of remove_hypermut
 #'
 #' @description
-#' A simple function that resolves the ancestor argument passed to the remove_hypermut function.
+#' A simple function that resolves the ancestor argument passed to the
+#' remove_hypermut function.
 #'
 #' @details
-#' Three options exists for specifying the ancestral sequence to compare the query sequences in the dataset to. If the value ‘consensus’ is specified via the ancestor parameter, a consensus sequence will be computed from the sequences in the input file. The letter that most frequently occurs is placed in the consensus sequence. In the case of ties, the first letter, when arranged alphabetically, is used. The second option is to include the ancestral sequence as the first sequence in the input file and to set the value of the ancestor parameter to ‘first’. In this case, the first sequence will be removed from the dataset before proceeding. Lastly, the ancestor parameter can be assigned the ancestral sequence itself. The only validation that is performed on the last of the three options is to check that the sequence assigned to ancestor has the same length as the sequences in the input file.
+#' Three options exists for specifying the ancestral sequence to compare the
+#' query sequences in the dataset to. If the value ‘consensus’ is specified via
+#' the ancestor parameter, a consensus sequence will be computed from the
+#' sequences in the input file. The letter that most frequently occurs is
+#' placed in the consensus sequence. In the case of ties, the first letter,
+#' when arranged alphabetically, is used. The second option is to include the
+#' ancestral sequence as the first sequence in the input file and to set the
+#' value of the ancestor parameter to ‘first’. In this case, the first sequence
+#' will be removed from the dataset before proceeding. Lastly, the ancestor
+#' parameter can be assigned the ancestral sequence itself. The only validation
+#' that is performed on the last of the three options is to check that the
+#' sequence assigned to ancestor has the same length as the sequences in the
+#' input file.
 #' 
-#' @param ancestor Either 'consensus' to indicate that the consensus sequences must be computed, or 'first' to indicate that the first sequence in the dataset should be considered to be the ancestral sequence, or the ancestral sequence itself.
+#' @param ancestor Either 'consensus' to indicate that the consensus sequences
+#' must be computed, or 'first' to indicate that the first sequence in the
+#' dataset should be considered to be the ancestral sequence, or the ancestral
+#' sequence itself.
 #' @param dat The sequence data
 #'
 #' @return A list with two elements:
 #' \describe{
-#'   \item{cons}{The ancestral sequence. Originally, only the consensus sequence option was supported, hence it is called 'cons' for historical reasons.}
-#'   \item{dat}{The sequence dataset. The dataset that was passed into this function via the dat parameter with the first sequence removed in the case of the 'first' option and unaltered in case of the other two options.}
+#'   \item{cons}{The ancestral sequence. Originally, only the consensus
+#'   sequence option was supported, hence it is called 'cons' for historical
+#'   reasons.}
+#'   \item{dat}{The sequence dataset. The dataset that was passed into this
+#'   function via the dat parameter with the first sequence removed in the case
+#'   of the 'first' option and unaltered in case of the other two options.}
 #' }
 #'
 #' @examples
@@ -44,29 +64,41 @@ ancestor_processing <- function(ancestor, dat){
 #' @title Detect and process hypermutated sequences
 #'
 #' @description 
-#' This function is a wrapper that will detect and either remove or 'fix' hypermutated
-#' sequences depending of the value of the 'fix_with' argument. 
+#' This function is a wrapper that will detect and either remove or 'fix'
+#' hypermutated sequences depending of the value of the 'fix_with' argument. 
 #'
 #' @details
-#' It calls \code{ancestor_processing} to obtain the ancestral sequence to compare the
-#' query sequences to, then calls \code{deduplicate_seqs} to remove duplicate
-#' sequences for performance reasons, next loops over each unique sequence,
-#' comparing it to the ancestral sequence with \code{scan_seq} and finally collates
-#' the results.
+#' It calls \code{ancestor_processing} to obtain the ancestral sequence to
+#' compare the query sequences to, then calls \code{deduplicate_seqs} to remove
+#' duplicate sequences for performance reasons, next loops over each unique
+#' sequence, comparing it to the ancestral sequence with \code{scan_seq} and
+#' finally collates the results.
 #'
-#' @seealso \code{\link{ancestor_processing}}, \code{\link{deduplicate_seqs}}, and 
-#'  \code{\link{scan_seq}}
+#' @seealso \code{\link{ancestor_processing}}, \code{\link{deduplicate_seqs}},
+#' and \code{\link{scan_seq}}
 #'
-#' @param dat The sequence data. The structure must match the format produced by read.fasta from the seqinr package. This is a list in which each element represents a single sequence. Each element is of class \code{SeqFastadna} and consists of a vector of single letters of class character with optional attributes names and Annot. 
-#' @param verbose If TRUE, print the name and p-value of removed/fixed sequences.
-#' @param fix_with Either FALSE or a single letter. If not FALSE, then replace the hypermutated base with the letter indicated.
-#' @param ancestor Either 'consensus' to indicate that the consensus sequences must be computed, or 'first' to indicate that the first sequence in the dataset should be considered to be the ancestral sequence, or the ancestral sequence itself.
+#' @param dat The sequence data. The structure must match the format produced
+#' by read.fasta from the seqinr package. This is a list in which each element
+#' represents a single sequence. Each element is of class \code{SeqFastadna}
+#' and consists of a vector of single letters of class character with optional
+#' attributes names and Annot. 
+#' @param verbose If TRUE, print the name and p-value of removed/fixed
+#' sequences.
+#' @param fix_with Either FALSE or a single letter. If not FALSE, then replace
+#' the hypermutated base with the letter indicated.
+#' @param ancestor Either 'consensus' to indicate that the consensus sequences
+#' must be computed, or 'first' to indicate that the first sequence in the
+#' dataset should be considered to be the ancestral sequence, or the ancestral
+#' sequence itself.
 #' @param p_value The p-value used by the one-sided fischer test.
 #'
 #' @return A list with three elements:
 #' \describe{
-#'   \item{all_mut_pos}{A data.frame that contains all the positions in all the sequences that are either a hypermutation or control position.}
-#'   \item{seq_results}{A list that stores all the sequences that did not contain any hypermutation and, in the case that the fix_with parameter was set, those sequences with hypermutation that was corrected.}
+#'   \item{all_mut_pos}{A data.frame that contains all the positions in all the
+#'   sequences that are either a hypermutation or control position.}
+#'   \item{seq_results}{A list that stores all the sequences that did not
+#'   contain any hypermutation and, in the case that the fix_with parameter was
+#'   set, those sequences with hypermutation that was corrected.}
 #'   \item{seq_hypermutants}{A list of all the sequences that contains hypermutation.}
 #' }
 #'
@@ -97,7 +129,10 @@ remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE, ancestor = 'c
     if (result_scan$p_value < p_value){
       if (verbose) {
         if (fix_with != FALSE) {
-          print(paste("Fixing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p_value, ". Replacing hypermutated positions with ", fix_with, ". Sequences will be left in the seq_results element of the return list and will also appear in the seq_hypermutants element.", sep = ''))
+          print(paste("Fixing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p_value, 
+                      ". Replacing hypermutated positions with ", fix_with, 
+                      ". Sequences will be left in the seq_results element of the return list and will", 
+                      " also appear in the seq_hypermutants element.", sep = ''))
         } else {
           print(paste("Removing ", ddat[[i]]$dup_names, " because p value of ", result_scan$p_value, sep = ''))
         }
