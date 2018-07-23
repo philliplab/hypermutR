@@ -7,7 +7,7 @@
 sim_hyper(dat, n1, n2, n3, seed = NULL, verbose = FALSE)
 }
 \arguments{
-\item{dat}{DNAStringSet with the sequences to mutate}
+\item{dat}{An alignment as produced by seqinr::read.fasta}
 
 \item{n1}{If less than one, the proportion of sequences to mutate, else
 the number of sequences to mutate.}

@@ -7,7 +7,7 @@
 convert_alignment_to_matrix(dat)
 }
 \arguments{
-\item{dat}{DNAStringSet in which each sequence is the same length}
+\item{dat}{An alignment as produced by seqinr::read.fasta}
 }
 \value{
 A character matrix

@@ -18,7 +18,7 @@ make_list_SeqFastadna <- function(dat){
 
 #' Converts an alignment to a matrix
 #'
-#' @param dat DNAStringSet in which each sequence is the same length
+#' @param dat An alignment as produced by seqinr::read.fasta
 #' @return A character matrix
 #' @export
 
@@ -43,7 +43,7 @@ convert_alignment_to_matrix <- function(dat){
 
 #' Simulates hypermutation in sequence datasets
 #'
-#' @param dat DNAStringSet with the sequences to mutate
+#' @param dat An alignment as produced by seqinr::read.fasta
 #' @param n1 If less than one, the proportion of sequences to mutate, else
 #' the number of sequences to mutate.
 #' @param n2 If less than one, the proportion of potential hypermutation
