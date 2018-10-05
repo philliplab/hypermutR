@@ -116,4 +116,4 @@ hypermutR.R -h
 
 This will display help for all the options and an example call to hypermutR.
 
-More details can be found in the vignette, which can be viewed online at (hypermutR vignette)[https://github.com/philliplab/hypermutR/blob/master/inst/doc/hypermut_vignette.pdf]
+More details can be found in the vignette, which can be viewed online at [hypermutR vignette](https://github.com/philliplab/hypermutR/blob/master/inst/doc/hypermut_vignette.pdf)
