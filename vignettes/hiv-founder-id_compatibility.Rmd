@@ -1,0 +1,39 @@
+---
+title: "Compatibility with hiv-founder-id"
+author: "Phillip Labuschagne"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Compatibility with hiv-founder-id}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`hypermutR` was originally developed as a replacement for the `removeHypermutatedSequences.R` script in the hiv-founder-id pipeline which is hosted at [Founder Pipeline](https://github.com/pedlefsen/hiv-founder-id).
+
+This script is (hopefully was by the time you read this) called from the `identify-founders.pl` script using perl's backtick notation. Information was passed to the `removeHypermutatedSequences.R` script by setting environment variables. Information was passed back to the `identify-founders.pl` script by printing to STDOUT and by saving results in a file whose name is specified by one of the environment variables.
+
+The intended way to use `hypermutR` is either via the hypermutR.R script included in the package's inst directory or by importing the package in an R session and calling the `remove_hypermut` function.
+
+To ease integration of `hypermutR` into the hiv-founder-id pipeline, a removeHypermutatedSequences.R script is included in the inst folder of the package. This script can be called using the call that was originally included in the `identify-founders.pl` script.
+
+Environment variables included in the `identify-founders.pl` call:
+
+* `removeHypermutatedSequences_fixWith`
+* `removeHypermutatedSequences_fixInsteadOfRemove`
+* `removeHypermutatedSequences_pValueThreshold`
+* `removeHypermutatedSequences_inputFilename`
+* `removeHypermutatedSequences_outputDir`
+
+Output expected by `identify-founders.pl` from `removeHypermutatedSequences.R`.
+
+* Number of hypermutated sequences printed to STDOUT.
+* Fasta file written out by `ape::write.dna` to `removeHypermutatedSequences_outputDir/removeHypermutatedSequences_inputFilename` with the call `write.dna( out.fasta, out.fasta.file, format = "fasta", colsep = "", indent = 0, blocksep = 0, colw = 72 )`
+

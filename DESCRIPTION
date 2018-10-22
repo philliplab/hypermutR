@@ -5,7 +5,7 @@ Author: Paul Edlefsen <pedlefsen@gmail.com>,
         Phillip Labuschagne <philliplab@gmail.com>
 Maintainer: Phillip Labuschagne <philliplab@gmail.com>
 Description: Follows the algorithm described on the website of the Hypermut tool on LANL to detect hypermutation.
-Depends: 
+Depends:
     R (>= 3.2.3),
     ape,
     ade4,
@@ -15,6 +15,9 @@ Depends:
 License: GPLv3
 LazyData: true
 Suggests: testthat,
-    R.rsp
-VignetteBuilder: R.rsp
+    R.rsp,
+    knitr,
+    rmarkdown
+VignetteBuilder: R.rsp,
+    knitr
 RoxygenNote: 6.1.0
