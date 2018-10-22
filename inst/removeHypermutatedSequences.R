@@ -1,7 +1,7 @@
-library( "ape" ) # for "read.dna", "write.dna"
-library( "seqinr" ) # for "write.fasta" and "read.fasta"
+suppressMessages(library( "ape" )) # for "read.dna", "write.dna"
+suppressMessages(library( "seqinr" )) # for "write.fasta" and "read.fasta"
 # The conversion between ape and seqinr formats is tedious - I write and read to disk to do it.
-library( "hypermutR" )
+suppressMessages(library( "hypermutR" ))
 
 # TODO: REMOVE
 # convenient debugging assignments
@@ -82,7 +82,7 @@ if( file.exists( fasta.file ) ) {
   ape::write.dna( result_in_ape_format, out.fasta.file, format = "fasta", colsep = "", indent = 0, blocksep = 0, colw = 72 ); # TODO: DEHACKIFY MAGIC NUMBER 72 (fasta newline column)
   write.csv(x$all_mut_pos, paste( output.dir, "/", fasta.file.short.nosuffix, "_potentialHypermutatedPositions.csv", sep = ''), row.names=F)
 
-  print(length(seq_hypermutants))
+  print(length(x$seq_hypermutants))
 } else {
   stop( paste( "File does not exist:", fasta.file ) );
 }
