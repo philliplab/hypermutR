@@ -1,6 +1,6 @@
 Package: hypermutR
 Title: Detects hypermutation in DNA
-Version: 0.0.0.9003
+Version: 0.0.1.0
 Author: Paul Edlefsen <pedlefsen@gmail.com>,
         Phillip Labuschagne <philliplab@gmail.com>
 Maintainer: Phillip Labuschagne <philliplab@gmail.com>
