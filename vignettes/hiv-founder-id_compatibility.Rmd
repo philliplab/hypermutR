@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Overview
+
 `hypermutR` was originally developed as a replacement for the
 `removeHypermutatedSequences.R` script in the hiv-founder-id pipeline which is
 hosted at [Founder Pipeline](https://github.com/pedlefsen/hiv-founder-id).
@@ -27,16 +29,26 @@ variables. Information was passed back to the `identify-founders.pl` script by
 printing to STDOUT and by saving results in a file whose name is specified by
 one of the environment variables.
 
-The intended way to use `hypermutR` is either via the hypermutR.R script
-included in the package's inst directory or by importing the package in an R
-session and calling the `remove_hypermut` function.
-
 To ease integration of `hypermutR` into the hiv-founder-id pipeline, a
-removeHypermutatedSequences.R script is included in the inst folder of the
+`removeHypermutatedSequences.R` script is included in the `inst` folder of the
 package. This script can be called using the call that was originally included
-in the `identify-founders.pl` script.
+in the `identify-founders.pl` script. To locate this script after you installed
+`hypermutR`, run the command `print(file.path(find.package('hypermutR'),
+'removeHypermutatedSequences.R'))` from within an R session.  To modify the
+`identify-founders.pl` script to use hypermutR, you can just replace the
+`removeHypermutatedSequences.R` script in the founder pipleline folder with the
+`removeHypermutatedSequences.R` script from the hypermutR package.
 
-Environment variables included in the `identify-founders.pl` call:
+The intended way to use `hypermutR` is either via the hypermutR.R script
+included in the package's `inst` directory or by importing the package in an R
+session and calling the `remove_hypermut` function. The
+`removeHypermutatedSequences.R` script is just provided to make integration
+into the founder-pipeline more convenient.
+
+## Interface details of `removeHypermutatedSequences.R`
+
+Environment variables set by `identify-founders.pl` when calling
+`removeHypermutatedSequences.R`:
 
 * `removeHypermutatedSequences_fixWith`
 * `removeHypermutatedSequences_fixInsteadOfRemove`
