@@ -65,23 +65,12 @@ Then, from within R, install devtools:
 install.packages('devtools', repo = 'http://cran.rstudio.com/')
 ```
 
-Finally, install hypermutR:
+Finally, install hypermutR from github:
 From a local file:
 
 ```{r}
 library(devtools)
-install_local('/path/to/file/hypermutR_x.y.z.tar.gz')
-```
-
-Please note that you must use install_local from devtools - install.packages
-will not work. Change /path/to/file to the path to the installation file on
-your computer and x.y.z to match the installation file you have.
-
-Or using the bit_bucket repo:
-```{r}
-library(devtools)
-install_bitbucket('hivdiversity/hypermutR', 
-  auth_user = 'username', password = 'password')
+install_github('philliplab/hypermutR')
 ```
 
 Lastly, hypermutR includes a script that can be run from the commandline. You
