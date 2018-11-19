@@ -13,9 +13,11 @@
 #' @param dat The sequence data (SeqFastadna)
 #'
 #' @return A list in which each unique sequence has an entry consisting of:
-#' 1. the_seq containing the sequence as a character string.
-#' 2. dup_names which is a character vector of the headers of all the
+#' \enumerate{
+#'   \item the_seq: The sequence as a character string.
+#'   \item dup_names: A character vector of the headers of all the
 #'    sequences that had that exact sequence.
+#' }
 #'
 #' @examples
 #' deduplicate_seqs(ld_seqs)
