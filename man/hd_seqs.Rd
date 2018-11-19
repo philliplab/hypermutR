@@ -34,7 +34,7 @@ the descendant and the last one the length of the edge. The simulation is
 initiated by assigning the seed sequence to the descendant in the first row
 of the dataset. The ancestor is then constructed by randomly mutating the
 seed sequence until it diverged by the edge length. The newly simulated
-ancestor sequence is the used to generate the other sequences that are
+ancestor sequence is then used to generate the other sequences that are
 directly related to it. This process is continued until all the sequences in
 the entire tree (including the internal nodes) are generated. Extra variability 
 was introduced into this dataset by multiplying all the branch lengths by 2.
