@@ -6,16 +6,16 @@
 using namespace Rcpp;
 
 // rcpp_scan_seq
-Rcpp::List rcpp_scan_seq(CharacterVector cons, CharacterVector the_seq, CharacterVector the_pattern, LogicalVector fix_with);
-RcppExport SEXP _hypermutR_rcpp_scan_seq(SEXP consSEXP, SEXP the_seqSEXP, SEXP the_patternSEXP, SEXP fix_withSEXP) {
+Rcpp::List rcpp_scan_seq(CharacterVector r_cons, CharacterVector r_the_seq, CharacterVector r_the_pattern, CharacterVector r_fix_with);
+RcppExport SEXP _hypermutR_rcpp_scan_seq(SEXP r_consSEXP, SEXP r_the_seqSEXP, SEXP r_the_patternSEXP, SEXP r_fix_withSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type cons(consSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type the_seq(the_seqSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type the_pattern(the_patternSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type fix_with(fix_withSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_scan_seq(cons, the_seq, the_pattern, fix_with));
+    Rcpp::traits::input_parameter< CharacterVector >::type r_cons(r_consSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type r_the_seq(r_the_seqSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type r_the_pattern(r_the_patternSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type r_fix_with(r_fix_withSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_scan_seq(r_cons, r_the_seq, r_the_pattern, r_fix_with));
     return rcpp_result_gen;
 END_RCPP
 }
