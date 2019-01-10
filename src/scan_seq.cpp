@@ -4,16 +4,20 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 
-Rcpp::List rcpp_scan_seq(CharacterVector r_cons, CharacterVector r_the_seq, 
+Rcpp::List rcpp_scan_seq_int(CharacterVector r_cons, CharacterVector r_the_seq, 
   CharacterVector r_the_pattern, CharacterVector r_fix_with){
-
-  std::cout << r_fix_with << std::endl;
 
   int num_potential_mut = 0;
   int num_mut = 0;
   int num_potential_control = 0;
   int num_control = 0;
-  std::vector< int > all_mut_pos;
+  
+  std::vector< int > amp_pos;
+  std::vector< char > amp_base_in_query;
+  std::vector< std::string > amp_full_seq;
+  std::vector< std::string > amp_type;
+  std::vector< std::string > amp_muted;
+
   bool hypermuted = false;
   bool fix = false;
   std::string fix_with_str;
@@ -84,54 +88,63 @@ Rcpp::List rcpp_scan_seq(CharacterVector r_cons, CharacterVector r_the_seq,
           ( the_seq[window_start_i + context_indx2 ] == 'T' ) ) ) {
 
       num_potential_mut++;
+      amp_pos.push_back(window_start_i);
+      amp_base_in_query.push_back(the_seq[ window_start_i ]);
+      amp_full_seq.push_back( the_seq.substr( window_start_i, 3) );
+      amp_type.push_back( "mut" );
 
       if ( the_seq[ window_start_i + 0 ] == 'A'){
         hypermuted = true;
         num_mut++;
-        all_mut_pos.push_back(window_start_i);
+        amp_muted.push_back( "yes" );
         if (fix){
           the_seq[ window_start_i ] = fix_with;
         }
+      } else {
+        amp_muted.push_back( "no" );
       }
-
     }
 
-//    if( ( cons[window_start_i + 0 ] == "G" ) && 
-//          # Reference must mutate from G
-//        ( the_seq[window_start_i + context_indx1 ] %in% c( "A", "G" ) ) && 
-//          # Context position 1 must match R = [AG] in query
-//        ( the_seq[window_start_i + context_indx2 ] %in% c( "A", "G", "T" ) ) ){ 
-//          # Context position 2 must match D = [AGT] in query
-//        num_potential_mut <- num_potential_mut + 1;
-//        hyper_muted <- as.character( the_seq[ window_start_i + 0 ] ) == "A"
-//        all_mut_pos <- rbind(all_mut_pos,
-//          data.frame(pos = window_start_i,
-//                     base_in_query = as.character( the_seq[ window_start_i + 0 ] ),
-//                     full_seq = paste(as.character( the_seq[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
-//                                      sep = '', collapse = ''),
-//                     type = 'mut',
-//                     muted = hyper_muted,
-//                     stringsAsFactors = F)
-//          )
-//        if( hyper_muted ) { 
-//            # If G -> A mutation occurred
-//            num_mut <- num_mut + 1;
-//            if ( fix_with != FALSE ) {
-//              the_seq[ window_start_i ] <- fix_with
-//            }
-//        }
-//    }
+    // Check for control spots
+    if (( cons[ window_start_i + 0 ] == 'G' ) && 
+      // Reference must mutate from G
+      ((( the_seq[ window_start_i + context_indx1 ] == 'C' ) || 
+      ( the_seq[ window_start_i + context_indx1 ] == 'T' )) && 
+      // Option 1 Context position 1 must match Y = [CT] in query
+      (( the_seq[ window_start_i + context_indx2 ] == 'A' ) || 
+      ( the_seq[ window_start_i + context_indx2 ] == 'C' ) || 
+      ( the_seq[ window_start_i + context_indx2 ] == 'G' ) || 
+      ( the_seq[ window_start_i + context_indx2 ] == 'T' ))) || 
+      // Option 1 Context position 2 must match N = [ACGT] in query
+      ((( the_seq[ window_start_i + context_indx1 ] == 'A' ) || 
+      ( the_seq[ window_start_i + context_indx1 ] == 'G' )) && 
+      // Option 2 Context position 1 must match R = [AG] in query
+      ( the_seq[ window_start_i + context_indx2 ] == 'C' ))){ 
+      // Option 2 Context position 2 must match C
 
-
+      num_potential_control++;
+      amp_pos.push_back(window_start_i);
+      amp_base_in_query.push_back(the_seq[ window_start_i ]);
+      amp_full_seq.push_back( the_seq.substr( window_start_i, 3) );
+      amp_type.push_back( "mut" );
   
+      if ( the_seq[ window_start_i + 0 ] == 'A' ){
+        num_control++;
+        amp_muted.push_back( "yes" );
+      } else {
+        amp_muted.push_back( "no" );
+      }
+    }
   }
 
-//  // hacky slashy for dev
-//  all_mut_pos.push_back(1);
-//  all_mut_pos.push_back(2);
-//  all_mut_pos.push_back(3);
-//  all_mut_pos.push_back(4);
-//  all_mut_pos.push_back(5);
+  Rcpp::List all_mut_pos;
+  all_mut_pos = Rcpp::List::create(
+    Rcpp::Named("pos") = amp_pos,
+    Rcpp::Named("base_in_query") = amp_base_in_query,
+    Rcpp::Named("full_seq") = amp_full_seq,
+    Rcpp::Named("type") = amp_type,
+    Rcpp::Named("muted") = amp_muted
+  );
 
   Rcpp::List result;
   result = Rcpp::List::create(
@@ -139,7 +152,6 @@ Rcpp::List rcpp_scan_seq(CharacterVector r_cons, CharacterVector r_the_seq,
     Rcpp::Named("num_potential_mut") = num_potential_mut,
     Rcpp::Named("num_control") = num_control,
     Rcpp::Named("num_potential_control") = num_potential_control,
-    Rcpp::Named("p_value") = 0.1,
     Rcpp::Named("all_mut_pos") = all_mut_pos,
     Rcpp::Named("the_seq") = the_seq
   );

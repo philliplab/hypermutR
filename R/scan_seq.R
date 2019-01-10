@@ -153,3 +153,41 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
               the_seq = the_seq)
   )
 }
+
+#' Wrapper for C++ implementation of scan_seq
+#' @export
+
+rcpp_scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
+  cons <- toupper(paste(cons, collate = ''))
+  the_seq <- toupper(paste(the_seq, collate = ''))
+  if (!fix_with){
+    fix_with <- "FALSE"
+  }
+  result <- hypermutR:::rcpp_scan_seq_int(cons, the_seq, the_pattern, FALSE)
+  p_value <- fisher.test( matrix( c( result$num_control, ( result$num_potential_control - result$num_control ), result$num_mut, ( result$num_potential_mut - result$num_mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
+  all_mut_pos <- data.frame(
+    pos = result$all_mut_pos$pos,
+    base_in_query = result$all_mut_pos$base_in_query,
+    full_seq = result$all_mut_pos$full_seq,
+    type = result$all_mut_pos$type,
+    muted = result$all_mut_pos$muted,
+    stringsAsFactors = FALSE
+  )
+  return(list(num_mut = result$num_mut,
+              num_potential_mut = result$num_potential_mut,
+              num_control = result$num_control,
+              num_potential_control = result$num_potential_control,
+              p_value = p_value,
+              all_mut_pos = all_mut_pos,
+              the_seq = the_seq)
+  )
+}
+
+
+
+
+
+
+
+
+
