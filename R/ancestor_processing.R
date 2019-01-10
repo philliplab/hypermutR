@@ -1,3 +1,7 @@
+#' @useDynLib hypermutR
+#' @importFrom Rcpp sourceCpp
+NULL
+
 #' Resolve the ancestor argument of remove_hypermut
 #'
 #' @description

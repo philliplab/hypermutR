@@ -12,6 +12,8 @@ Depends:
     optparse,
     seqinr,
     testthat
+Imports: Rcpp
+LinkingTo: Rcpp
 License: GPLv3
 LazyData: true
 Suggests: testthat,

@@ -11,7 +11,7 @@ scan_seq(cons, the_seq, the_pattern, fix_with = FALSE)
 
 \item{the_seq}{The query sequence}
 
-\item{the_pattern}{The pattern to sequence for. Valid values: 'hyper' and
+\item{the_pattern}{(not currently in use) The pattern to sequence for. Valid values: 'hyper' and
 'control'}
 
 \item{fix_with}{Either false or a single letter. If not FALSE, then replace

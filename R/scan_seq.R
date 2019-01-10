@@ -17,7 +17,7 @@
 #'
 #' @param cons The ancestral sequences to compare against
 #' @param the_seq The query sequence
-#' @param the_pattern The pattern to sequence for. Valid values: 'hyper' and
+#' @param the_pattern (not currently in use) The pattern to sequence for. Valid values: 'hyper' and
 #' 'control'
 #' @param fix_with Either false or a single letter. If not FALSE, then replace
 #' the hypermutated base with the letter indicated.
@@ -143,6 +143,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
       }
   } # for window_start_i
   p_value <- fisher.test( matrix( c( num_control, ( num_potential_control - num_control ), num_mut, ( num_potential_mut - num_mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
+
   return(list(num_mut = num_mut,
               num_potential_mut = num_potential_mut,
               num_control = num_control,
