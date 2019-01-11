@@ -17,8 +17,6 @@
 #'
 #' @param cons The ancestral sequences to compare against
 #' @param the_seq The query sequence
-#' @param the_pattern (not currently in use) The pattern to sequence for. Valid values: 'hyper' and
-#' 'control'
 #' @param fix_with Either false or a single letter. If not FALSE, then replace
 #' the hypermutated base with the letter indicated.
 #'
@@ -33,7 +31,7 @@
 #'
 #' @export
 
-scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
+scan_seq <- function(cons, the_seq, fix_with = FALSE){
   if (fix_with != FALSE){
     fix_with <- tolower(fix_with)
     stopifnot(tolower(fix_with) %in% letters)
@@ -100,7 +98,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
                        base_in_query = as.character( the_seq[ window_start_i + 0 ] ),
                        full_seq = paste(as.character( the_seq[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
                                         sep = '', collapse = ''),
-                       type = 'mut',
+                       type = 'hyp',
                        muted = hyper_muted,
                        stringsAsFactors = F)
             )
@@ -130,7 +128,7 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
                        base_in_query = as.character( the_seq[ window_start_i + 0 ] ),
                        full_seq = paste(as.character( the_seq[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
                                         sep = '', collapse = ''),
-                       type = 'pot',
+                       type = 'con',
                        muted = control_muted,
                        stringsAsFactors = F)
             )
@@ -157,29 +155,43 @@ scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
 #' Wrapper for C++ implementation of scan_seq
 #' @export
 
-rcpp_scan_seq <- function(cons, the_seq, the_pattern, fix_with = FALSE){
-  cons <- toupper(paste(cons, collate = ''))
-  the_seq <- toupper(paste(the_seq, collate = ''))
-  if (!fix_with){
+rcpp_scan_seq <- function(cons, the_seq, fix_with = FALSE){
+  if (length(cons) > 1){
+    cons <- toupper(paste(cons, collate = ''))
+  } else {
+    cons <- toupper(cons)
+  }
+  if (length(the_seq) > 1){
+    the_seq <- toupper(paste(the_seq, collate = ''))
+  } else {
+    the_seq <- toupper(the_seq)
+  }
+  stopifnot(nchar(cons) == nchar(the_seq))
+  if (fix_with != FALSE){
+    fix_with <- tolower(fix_with)
+    stopifnot(tolower(fix_with) %in% letters)
+  } else {
     fix_with <- "FALSE"
   }
-  result <- hypermutR:::rcpp_scan_seq_int(cons, the_seq, the_pattern, FALSE)
+  result <- hypermutR:::rcpp_scan_seq_int(cons, the_seq, fix_with)
   p_value <- fisher.test( matrix( c( result$num_control, ( result$num_potential_control - result$num_control ), result$num_mut, ( result$num_potential_mut - result$num_mut ) ), nrow = 2, byrow = T ), alternative = 'less' )$p.value;
   all_mut_pos <- data.frame(
     pos = result$all_mut_pos$pos,
     base_in_query = result$all_mut_pos$base_in_query,
     full_seq = result$all_mut_pos$full_seq,
+    cons_seq = result$all_mut_pos$cons_seq,
     type = result$all_mut_pos$type,
-    muted = result$all_mut_pos$muted,
+    muted = ifelse(result$all_mut_pos$muted == "yes", T, F),
     stringsAsFactors = FALSE
   )
+  if (nrow(all_mut_pos) == 0) {all_mut_pos <- NULL}
   return(list(num_mut = result$num_mut,
               num_potential_mut = result$num_potential_mut,
               num_control = result$num_control,
               num_potential_control = result$num_potential_control,
               p_value = p_value,
               all_mut_pos = all_mut_pos,
-              the_seq = the_seq)
+              the_seq = strsplit(result$the_seq, '')[[1]])
   )
 }
 

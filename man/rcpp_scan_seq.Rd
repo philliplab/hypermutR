@@ -4,7 +4,7 @@
 \alias{rcpp_scan_seq}
 \title{Wrapper for C++ implementation of scan_seq}
 \usage{
-rcpp_scan_seq(cons, the_seq, the_pattern, fix_with = FALSE)
+rcpp_scan_seq(cons, the_seq, fix_with = FALSE)
 }
 \description{
 Wrapper for C++ implementation of scan_seq

@@ -4,15 +4,12 @@
 \alias{scan_seq}
 \title{Sequence scanner}
 \usage{
-scan_seq(cons, the_seq, the_pattern, fix_with = FALSE)
+scan_seq(cons, the_seq, fix_with = FALSE)
 }
 \arguments{
 \item{cons}{The ancestral sequences to compare against}
 
 \item{the_seq}{The query sequence}
-
-\item{the_pattern}{(not currently in use) The pattern to sequence for. Valid values: 'hyper' and
-'control'}
 
 \item{fix_with}{Either false or a single letter. If not FALSE, then replace
 the hypermutated base with the letter indicated.}

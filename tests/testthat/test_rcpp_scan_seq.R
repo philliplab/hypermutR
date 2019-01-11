@@ -1,14 +1,14 @@
 library(hypermutR)
 
-context("scan_seq")
+context("rcpp_scan_seq")
 
-test_that("scan_seq works", {
+test_that("rcpp_scan_seq works", {
 
   cons_seq <- deduplicate_seqs(ld_seqs)[[1]]$the_seq
   
   # all muts mutatated
   query_seq <- sim_hyper(cons_seq, 1, 'all', 0, seed = 1)
-  result <- scan_seq(cons_seq, query_seq)
+  result <- rcpp_scan_seq(cons_seq, query_seq)
   expect_equal(result$num_mut, 43)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num_control, 0)
@@ -22,7 +22,7 @@ test_that("scan_seq works", {
 
   # all control mutatated
   query_seq <- sim_hyper(cons_seq, 1, 0, 'all', seed = 2)
-  result <- scan_seq(cons_seq, query_seq)
+  result <- rcpp_scan_seq(cons_seq, query_seq)
   expect_equal(result$num_mut, 0)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num_control, 44)
@@ -35,7 +35,7 @@ test_that("scan_seq works", {
                result$p_value)
 
   # no mutations
-  result <- scan_seq(cons_seq, cons_seq)
+  result <- rcpp_scan_seq(cons_seq, cons_seq)
   expect_equal(result$num_mut, 0)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num_control, 0)
@@ -49,7 +49,7 @@ test_that("scan_seq works", {
 
   # all control and mut mutated
   query_seq <- sim_hyper(cons_seq, 1, 'all', 'all', seed = 3)
-  result <- scan_seq(cons_seq, query_seq)
+  result <- rcpp_scan_seq(cons_seq, query_seq)
   expect_equal(result$num_mut, 43)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num_control, 44)
@@ -63,7 +63,7 @@ test_that("scan_seq works", {
 
   # 50% mut and 50% control
   query_seq <- sim_hyper(cons_seq, 1, .5, .5, seed = 3)
-  result <- scan_seq(cons_seq, query_seq)
+  result <- rcpp_scan_seq(cons_seq, query_seq)
   expect_equal(result$num_mut, 21)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num_control, 22)
@@ -77,7 +77,7 @@ test_that("scan_seq works", {
 
   # 50% mut and 0% control
   query_seq <- sim_hyper(cons_seq, 1, .5, 0, seed = 3)
-  result <- scan_seq(cons_seq, query_seq)
+  result <- rcpp_scan_seq(cons_seq, query_seq)
   expect_equal(result$num_mut, 21)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num_control, 0)
@@ -91,7 +91,7 @@ test_that("scan_seq works", {
 
   # 0% mut and 50% control
   query_seq <- sim_hyper(cons_seq, 1, 0, .5, seed = 3)
-  result <- scan_seq(cons_seq, query_seq)
+  result <- rcpp_scan_seq(cons_seq, query_seq)
   expect_equal(result$num_mut, 0)
   expect_equal(result$num_potential_mut, 43)
   expect_equal(result$num_control, 22)
@@ -104,10 +104,10 @@ test_that("scan_seq works", {
                result$p_value)
 })
 
-test_that("scan_seq detects the correct positions", {
+test_that("rcpp_scan_seq detects the correct positions", {
   cons_seq <-  "cccgggcccgat"
   query_seq <- "cccaggcccgat"
-  result <- scan_seq(cons_seq, query_seq)
+  result <- rcpp_scan_seq(cons_seq, query_seq)
   expect_equal(nrow(result$all_mut_pos), 4)
   expect_equal(class(result$all_mut_pos), 'data.frame')
   expect_equal(sort(result$all_mut_pos$pos), c(4, 5, 6, 10))
@@ -117,62 +117,63 @@ test_that("scan_seq detects the correct positions", {
   expect_equal(sort(result$all_mut_pos$muted), c(F, F, F, T))
 })
 
-test_that("scan_seq handles gaps correctly", {
+test_that("rcpp_scan_seq handles gaps correctly", {
   the_seq <- "--GAA"
-  result <- scan_seq(the_seq, the_seq)
+  result <- rcpp_scan_seq(the_seq, the_seq)
   expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CCG--AA"
-  result <- scan_seq(the_seq, the_seq)
+  result <- rcpp_scan_seq(the_seq, the_seq)
   expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CGA-T"
-  result <- scan_seq(the_seq, the_seq)
+  result <- rcpp_scan_seq(the_seq, the_seq)
   expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 2)
 
   the_seq <- "--GCA"
-  result <- scan_seq(the_seq, the_seq)
+  result <- rcpp_scan_seq(the_seq, the_seq)
   expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CCG--AC"
-  result <- scan_seq(the_seq, the_seq)
+  result <- rcpp_scan_seq(the_seq, the_seq)
   expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 3)
 
   the_seq <- "CGC-C"
-  result <- scan_seq(the_seq, the_seq)
+  result <- rcpp_scan_seq(the_seq, the_seq)
   expect_equal(result$num_potential_mut + result$num_potential_control, 1)
   expect_equal(result$all_mut_pos$pos, 2)
 })
 
-test_that("scan_seq fixes sequences correctly", {
+test_that("rcpp_scan_seq fixes sequences correctly", {
   the_seq <- "CCAAA"
   the_con <- "CCGAA"
-  expect_error(result <- scan_seq(the_con, the_seq, fix_with = 'hello'))
-  result <- scan_seq(the_con, the_seq, fix_with = 'r')
+  expect_error(result <- rcpp_scan_seq(the_con, the_seq, fix_with = 'hello'))
+  result <- rcpp_scan_seq(the_con, the_seq, fix_with = 'r')
   expect_true('the_seq' %in% names(result))
   expect_true(all(tolower(result$the_seq) %in% c(letters, '-')))
   expect_true('r' %in% result$the_seq)
 })
 
-test_that("scan_seq requires the consensus and the sequence to be of equal length", {
+test_that("rcpp_scan_seq requires the consensus and the sequence to be of equal length", {
   the_seq <- "CCAA"
   the_con <- "CCGAA"
-  expect_error(result <- scan_seq(the_con, the_seq), 'length\\(cons\\) == length\\(the_seq\\) is not TRUE')
+  expect_error(result <- rcpp_scan_seq(the_con, the_seq), 'nchar\\(cons\\) == nchar\\(the_seq\\) is not TRUE')
 })
 
-test_that("scan_seq handles short sequences", {
+test_that("rcpp_scan_seq handles short sequences", {
   short_target_result <- structure(list(num_mut = 0, num_potential_mut = 0, num_control = 0,
     num_potential_control = 0, p_value = 1, all_mut_pos = NULL,
     the_seq = c("A", "A", "A")), .Names = c("num_mut", "num_potential_mut",
 "num_control", "num_potential_control", "p_value", "all_mut_pos",
 "the_seq"))
   short_target_result$the_seq <- 'A'
-  expect_equal(scan_seq("A", "A"), short_target_result)
+  x <- rcpp_scan_seq("A", "A")
+  expect_equal(x, short_target_result)
   short_target_result$the_seq <- c('G', 'G')
-  expect_equal(scan_seq("GG", "GG"), short_target_result)
+  expect_equal(rcpp_scan_seq("GG", "GG"), short_target_result)
 })

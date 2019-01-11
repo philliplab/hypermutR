@@ -6,22 +6,21 @@
 using namespace Rcpp;
 
 // rcpp_scan_seq_int
-Rcpp::List rcpp_scan_seq_int(CharacterVector r_cons, CharacterVector r_the_seq, CharacterVector r_the_pattern, CharacterVector r_fix_with);
-RcppExport SEXP _hypermutR_rcpp_scan_seq_int(SEXP r_consSEXP, SEXP r_the_seqSEXP, SEXP r_the_patternSEXP, SEXP r_fix_withSEXP) {
+Rcpp::List rcpp_scan_seq_int(CharacterVector r_cons, CharacterVector r_the_seq, CharacterVector r_fix_with);
+RcppExport SEXP _hypermutR_rcpp_scan_seq_int(SEXP r_consSEXP, SEXP r_the_seqSEXP, SEXP r_fix_withSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type r_cons(r_consSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type r_the_seq(r_the_seqSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type r_the_pattern(r_the_patternSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type r_fix_with(r_fix_withSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_scan_seq_int(r_cons, r_the_seq, r_the_pattern, r_fix_with));
+    rcpp_result_gen = Rcpp::wrap(rcpp_scan_seq_int(r_cons, r_the_seq, r_fix_with));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hypermutR_rcpp_scan_seq_int", (DL_FUNC) &_hypermutR_rcpp_scan_seq_int, 4},
+    {"_hypermutR_rcpp_scan_seq_int", (DL_FUNC) &_hypermutR_rcpp_scan_seq_int, 3},
     {NULL, NULL, 0}
 };
 
