@@ -47,6 +47,8 @@
 
 remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE, ancestor = 'consensus', p_value = 0.05){
   cons <- ancestor_processing(ancestor, dat)
+  dat <- cons$dat
+  cons <- cons$cons
 
   results <- NULL
   hypermutants <- NULL
@@ -54,7 +56,7 @@ remove_hypermut <- function(dat, verbose = TRUE, fix_with = FALSE, ancestor = 'c
   
   ddat <- deduplicate_seqs(dat)
   for (i in 1:length(ddat)){
-    result_scan <- scan_seq(cons, ddat[[i]]$the_seq, fix_with = fix_with)
+    result_scan <- rcpp_scan_seq(cons, ddat[[i]]$the_seq, fix_with = fix_with)
     c_all_mut_pos <- NULL
     for (c_name in ddat[[i]]$dup_name){
       c_all_mut_pos <- rbind(c_all_mut_pos,

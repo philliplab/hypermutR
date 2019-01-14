@@ -98,6 +98,8 @@ scan_seq <- function(cons, the_seq, fix_with = FALSE){
                        base_in_query = as.character( the_seq[ window_start_i + 0 ] ),
                        full_seq = paste(as.character( the_seq[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
                                         sep = '', collapse = ''),
+                       cons_seq = paste(as.character( cons[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
+                                        sep = '', collapse = ''),
                        type = 'hyp',
                        muted = hyper_muted,
                        stringsAsFactors = F)
@@ -127,6 +129,8 @@ scan_seq <- function(cons, the_seq, fix_with = FALSE){
             data.frame(pos = window_start_i,
                        base_in_query = as.character( the_seq[ window_start_i + 0 ] ),
                        full_seq = paste(as.character( the_seq[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
+                                        sep = '', collapse = ''),
+                       cons_seq = paste(as.character( cons[ window_start_i + c(0, context_indx1, context_indx2) ] ), 
                                         sep = '', collapse = ''),
                        type = 'con',
                        muted = control_muted,
