@@ -7,8 +7,7 @@ which large numbers of Guanine was mutated to Adenine, specifically when that
 Guanine was surrounded by a particular pattern. The hypermut 2.0 tool available
 from https://www.hiv.lanl.gov/content/sequence/HYPERMUT/hypermut.html is a
 frequently used tool to detect and remove hypermutated sequences. We wrote a
-new implementation of the hypermut 2.0 algorithm in R, which is available in
-the hypermutR package on CRAN.
+new implementation of the hypermut 2.0 algorithm in R.
 
 The hypermut algorithm compares each sequence in an alignment to some ancestral
 sequence (usually approximated by the consensus sequence of the alignment),
@@ -65,8 +64,7 @@ Then, from within R, install devtools:
 install.packages('devtools', repo = 'http://cran.rstudio.com/')
 ```
 
-Finally, install hypermutR from github:
-From a local file:
+Install hypermutR from github:
 
 ```{r}
 library(devtools)
@@ -75,6 +73,7 @@ install_github('philliplab/hypermutR')
 
 Lastly, hypermutR includes a script that can be run from the commandline. You
 need to put this script somewhere convenient ('/usr/bin' for example)
+
 ```{r}
 file.symlink(from = file.path(find.package('hypermutR'), 'hypermutR.R'),
              to = '/usr/bin')
