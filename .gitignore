@@ -5,3 +5,5 @@
 .RData
 .Rproj
 inst/doc
+src/*.o
+src/*.so
