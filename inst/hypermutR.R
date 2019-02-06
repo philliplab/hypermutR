@@ -8,7 +8,7 @@ option_list <- list(
   make_option("--output_file", 
               help = "Path and name of output file"),
   make_option("--p_value",
-              default = 0.05,
+              default = 0.1,
               help = "The p-value to apply to the one-sided fischer test"),
   make_option("--ancestor",
               default = "consensus",
@@ -24,7 +24,7 @@ if (FALSE){
 }
 
 opt <- parse_args(OptionParser(option_list = option_list,
-  description = "Cast all hypermutants out into the cold!",
+  description = "Remove hypermutants",
   epilogue = "Example Call:
 hypermutR.R --input_file=/path/to/file.fasta --output_file=/path/to/out_file.fasta --p_value=0.1 --ancestor=first --fix_with=r
 
@@ -39,8 +39,7 @@ if(!grepl('.fasta$', opt$input_file)){stop('input_file must end in .fasta (lower
 if(!grepl('.fasta$', opt$output_file)){stop('ouput_file must end in .fasta (lowercase)')}
 
 dat <- read.fasta(opt$input_file)
-cdat <- remove_hypermut(dat, ancestor = opt$ancestor, fix_with=opt$fix_with, p_value = opt$p_value)
-names(cdat)
+cdat <- remove_hypermut(dat, verbose = FALSE, ancestor = opt$ancestor, fix_with=opt$fix_with, p_value = opt$p_value)
 write.fasta(cdat$seq_result, names(cdat$seq_result), opt$output_file)
 if (!is.null(cdat$seq_hypermutants)){
   write.fasta(cdat$seq_hypermutants, names(cdat$seq_hypermutants), 
